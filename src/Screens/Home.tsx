@@ -1,13 +1,19 @@
 import {StyleSheet, Text, View} from 'react-native';
 import React from 'react';
+import {createMaterialTopTabNavigator} from '@react-navigation/material-top-tabs';
+import {MainFeed} from '.';
+import FriendsFeed from './FriendsFeed';
+
+const Tab = createMaterialTopTabNavigator();
 
 type Props = {};
 
 const Home = (props: Props) => {
   return (
-    <View style={styles.container}>
-      <Text>Home</Text>
-    </View>
+    <Tab.Navigator transitionStyle="scroll">
+      <Tab.Screen name="Main Feed" component={MainFeed} />
+      <Tab.Screen name="Freinds Feed" component={FriendsFeed} />
+    </Tab.Navigator>
   );
 };
 
