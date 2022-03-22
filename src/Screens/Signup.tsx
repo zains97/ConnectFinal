@@ -16,6 +16,8 @@ const SignUp = ({navigation}: Props) => {
   const [confirmPassword, setConfirmPassword] = useState('');
   const [secureTextEntry, setSecureTextEntry] = useState(true);
   const [secureTextEntry2, setSecureTextEntry2] = useState(true);
+  const [firstName, setFirstName] = useState('');
+  const [lastName, setLastName] = useState('');
 
   const [date, setDate] = useState<Date>(new Date('Mar 25 2015'));
   const [open, setOpen] = useState(false);
@@ -35,6 +37,24 @@ const SignUp = ({navigation}: Props) => {
         <Text style={styles.signUpFormText}>
           Sign Up to connect with people with similar interests.
         </Text>
+        <View style={{flexDirection: 'row'}}>
+          <TextInput
+            placeholder="Enter first name"
+            onChangeText={text => {
+              setFirstName(text);
+            }}
+            value={firstName}
+            style={styles.nameInput}
+          />
+          <TextInput
+            placeholder="Enter last name"
+            onChangeText={text => {
+              setLastName(text);
+            }}
+            value={lastName}
+            style={styles.nameInput}
+          />
+        </View>
         <View>
           <TextInput
             placeholder="Email"
@@ -195,5 +215,11 @@ const styles = StyleSheet.create({
     backgroundColor: '#10b981',
     height: 40,
     marginVertical: 20,
+  },
+  nameInput: {
+    width: width * 0.4,
+    height: 40,
+    marginTop: 20,
+    marginHorizontal: 15,
   },
 });

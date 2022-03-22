@@ -1,7 +1,10 @@
-import {StyleSheet, Text, View, Dimensions, Image} from 'react-native';
-import React, {useState} from 'react';
+import {StyleSheet, Text, View, Dimensions, Image, Alert} from 'react-native';
+import React, {useEffect, useState} from 'react';
 import {Button, TextInput, TouchableRipple} from 'react-native-paper';
 import logo from '../Assets/modifiedConnectLogo.png';
+import {loginUser} from '../Api/userApis';
+import {AxiosResponse} from 'axios';
+import {storeMe} from '../Utilities/StoreMe';
 
 type Props = {
   navigation: any;
@@ -36,6 +39,7 @@ const Login = ({navigation}: Props) => {
             style={styles.textInput}
             activeUnderlineColor="#1d4ed8"
             left={<TextInput.Icon name="at" color="grey" size={22} />}
+            textContentType="emailAddress"
           />
           <TextInput
             secureTextEntry={secureTextEntry}
@@ -55,14 +59,21 @@ const Login = ({navigation}: Props) => {
                 }}
               />
             }
+            textContentType="password"
           />
         </View>
         <Button
           mode="contained"
           style={styles.loginButton}
           onPress={() => {
-            console.log('Working');
-            navigation.navigate('MainApp');
+            loginUser(email, password)
+              .then(res => {
+                storeMe(res);
+                navigation.navigate('MainApp');
+              })
+              .catch(err => {
+                Alert.alert('INVALID LOGIN CREDENTIALS');
+              });
           }}>
           Log In
         </Button>

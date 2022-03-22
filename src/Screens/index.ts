@@ -9,3 +9,4 @@ export {default as Login} from './Login';
 export {default as Signup} from './Signup';
 export {default as AuthStack} from './AuthStack';
 export {default as MainFeed} from './MainFeed';
+export {default as OtherProfile} from './OtherProfile';

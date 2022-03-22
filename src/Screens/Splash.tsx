@@ -1,11 +1,20 @@
 import {Image, StyleSheet, Text, View} from 'react-native';
 import React, {useEffect} from 'react';
 import logo from '../Assets/ConnectLogo.png';
+import {getMe} from '../Utilities/StoreMe';
 
-type Props = {};
+type Props = {
+  navigation: any;
+};
 
-const Splash = (props: Props) => {
-  useEffect(() => {}, []);
+const Splash = ({navigation}: Props) => {
+  useEffect(() => {
+    getMe().then(res => {
+      setTimeout(() => {
+        res ? navigation.navigate('MainApp') : navigation.navigate('Login');
+      }, 3000);
+    });
+  }, []);
 
   return (
     <View style={styles.splashContainer}>

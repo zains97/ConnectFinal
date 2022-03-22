@@ -1,25 +1,23 @@
+import React, {useState} from 'react';
 import {
-  StyleSheet,
-  Text,
-  TouchableOpacity,
   View,
-  ImageBackground,
+  Text,
   Image,
+  ImageBackground,
+  TouchableOpacity,
   Dimensions,
 } from 'react-native';
-import React, {useState} from 'react';
-import img from '../Assets/goku.png';
-import {Icon} from 'react-native-vector-icons/Icon';
-import FontAwesome5Icon from 'react-native-vector-icons/FontAwesome5';
-import {MyProfileModal} from '../Components';
+import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
+import OtherProfileModal from '../Components/OtherProfileModal';
 
-const Profile = () => {
+const OtherProfile = ({navigation: {}}) => {
   const [modalVisible, setModalVisible] = useState(false);
   const {width} = Dimensions.get('screen');
+  const image = require('../Assets/goku.png');
   return (
     <>
       <ImageBackground
-        source={img}
+        source={image}
         style={{
           flex: 1,
           justifyContent: 'center',
@@ -36,7 +34,7 @@ const Profile = () => {
             justifyContent: 'flex-end',
             width,
           }}>
-          <FontAwesome5Icon color={'white'} size={20} name="ellipsis-v" />
+          <FontAwesome5 size={20} name="ellipsis-v" color={'white'} />
         </TouchableOpacity>
         <View
           style={{
@@ -44,7 +42,7 @@ const Profile = () => {
             justifyContent: 'center',
             alignItems: 'center',
           }}>
-          <MyProfileModal
+          <OtherProfileModal
             modalVisible={modalVisible}
             setModalVisible={setModalVisible}
           />
@@ -60,13 +58,13 @@ const Profile = () => {
               backgroundColor: 'black',
             }}>
             <Image
-              source={img}
+              source={image}
               resizeMode="contain"
               style={{width: 250, height: 250}}
             />
           </View>
           <View style={{marginVertical: 10}}>
-            <Text style={{color: 'white', fontSize: 24}}>Zain Saleem</Text>
+            <Text style={{color: 'white', fontSize: 24}}>Ahsan here</Text>
           </View>
           <View
             style={{
@@ -110,12 +108,4 @@ const Profile = () => {
   );
 };
 
-export default Profile;
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-});
+export default OtherProfile;
