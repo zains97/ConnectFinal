@@ -10,9 +10,19 @@ import {
   Alert,
 } from 'react-native';
 import {ITags} from '../Interfaces/PostInterfaces';
+import {newPost} from '../Api/postApis';
+import {RootState} from '../Redux/store/store';
+import {useSelector} from 'react-redux';
+
 const image = require('../Assets/goku.png');
 
-const Publish = () => {
+interface Props {
+  navigation: {navigate: any};
+}
+
+const Publish = ({navigation}: Props) => {
+  const me = useSelector((state: RootState) => state.me.me);
+
   const {width} = Dimensions.get('screen');
   const tags: ITags[] = [
     {
@@ -90,7 +100,28 @@ const Publish = () => {
   ];
 
   const [postBody, setPostBody] = useState('');
-  const [tag, setTag] = useState<string>();
+  const [tag, setTag] = useState<string>('');
+
+  const publishPost = () => {
+    if (postBody.length < 10) {
+      Alert.alert('Post must be more than 10 characters long.');
+    } else {
+      if (tag) {
+        console.log('TOKEN', me.user._id);
+        newPost(
+          postBody,
+          tag,
+          me.user._id,
+          me.user.profilePic,
+          me.user.firstName,
+        );
+        Alert.alert('Post created');
+        setTimeout(() => navigation.navigate('MainApp'), 2000);
+      } else {
+        Alert.alert('You must select a tag.');
+      }
+    }
+  };
 
   return (
     <View style={{backgroundColor: 'white', flex: 1}}>
@@ -165,21 +196,23 @@ const Publish = () => {
           </ScrollView>
         </View>
         <View style={{justifyContent: 'center', alignItems: 'center'}}>
-          <TouchableOpacity activeOpacity={0.6}>
-            <View
-              style={{
-                width: width * 0.5,
-                padding: 6,
-                borderRadius: 5,
-                backgroundColor: '#3b82f6',
-                marginHorizontal: 5,
-                borderWidth: 2,
-                borderColor: '#1e40af',
-                justifyContent: 'center',
-                alignItems: 'center',
-              }}>
-              <Text style={{color: 'white', fontSize: 16}}>Publish Post</Text>
-            </View>
+          <TouchableOpacity
+            activeOpacity={0.6}
+            onPress={() => {
+              publishPost();
+            }}
+            style={{
+              width: width * 0.5,
+              padding: 6,
+              borderRadius: 5,
+              backgroundColor: '#3b82f6',
+              marginHorizontal: 5,
+              borderWidth: 2,
+              borderColor: '#1e40af',
+              justifyContent: 'center',
+              alignItems: 'center',
+            }}>
+            <Text style={{color: 'white', fontSize: 16}}>Publish Post</Text>
           </TouchableOpacity>
         </View>
       </View>

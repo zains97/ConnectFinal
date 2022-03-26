@@ -1,7 +1,7 @@
 import {StyleSheet, Text, View} from 'react-native';
 import React from 'react';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
-import {Home, Chat, Maps, Profile, Publish} from './index';
+import {Home, Chat, Maps, Profile, Publish, Test} from './index';
 import {Header} from '../Components';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import FontAwesome5Icons from 'react-native-vector-icons/FontAwesome5';

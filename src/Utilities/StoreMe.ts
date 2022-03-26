@@ -5,10 +5,9 @@ interface IMe {
   token: string;
 }
 
-export const storeMe = async (value: IMe) => {
+export const storeMe = async (value: IMe | null) => {
   try {
     const jsonValue = JSON.stringify(value);
-    console.log('JSON VALUE:\t', jsonValue);
     await AsyncStorage.setItem('Me', jsonValue);
   } catch (e) {
     console.log(e);

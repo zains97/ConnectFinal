@@ -2,17 +2,28 @@ import {Image, StyleSheet, Text, View} from 'react-native';
 import React, {useEffect} from 'react';
 import logo from '../Assets/ConnectLogo.png';
 import {getMe} from '../Utilities/StoreMe';
+import {useDispatch} from 'react-redux';
+import {updateMeState} from '../Redux/slices/MeSlice';
 
 type Props = {
   navigation: any;
 };
 
 const Splash = ({navigation}: Props) => {
+  const dispatch = useDispatch();
+
   useEffect(() => {
     getMe().then(res => {
+      if (res) {
+        dispatch(updateMeState(res));
+      }
       setTimeout(() => {
-        res ? navigation.navigate('MainApp') : navigation.navigate('Login');
-      }, 3000);
+        if (res) {
+          navigation.navigate('MainApp');
+        } else {
+          navigation.navigate('Login');
+        }
+      }, 2000);
     });
   }, []);
 

@@ -6,7 +6,7 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import React from 'react';
+import React, {useEffect} from 'react';
 import {getAllPosts} from '../Api/postApis';
 import {IPost} from '../Interfaces/PostInterfaces';
 import {

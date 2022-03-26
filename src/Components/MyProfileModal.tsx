@@ -8,13 +8,19 @@ import {
   TouchableOpacity,
 } from 'react-native';
 import React, {useState} from 'react';
+import {storeMe} from '../Utilities/StoreMe';
 
 const {width} = Dimensions.get('screen');
 interface Props {
   modalVisible: boolean;
   setModalVisible: any;
+  navigation: any;
 }
-const OtherProfileModal = ({modalVisible, setModalVisible}: Props) => {
+const OtherProfileModal = ({
+  navigation,
+  modalVisible,
+  setModalVisible,
+}: Props) => {
   return (
     <Modal
       animationType="fade"
@@ -42,7 +48,9 @@ const OtherProfileModal = ({modalVisible, setModalVisible}: Props) => {
           <TouchableOpacity
             style={styles.modalPressWarning}
             onPress={() => {
+              storeMe(null);
               setModalVisible(!modalVisible);
+              navigation.replace('Login');
             }}>
             <Text style={styles.textStyle}>Log Out</Text>
           </TouchableOpacity>

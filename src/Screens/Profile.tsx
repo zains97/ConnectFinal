@@ -7,19 +7,30 @@ import {
   Image,
   Dimensions,
 } from 'react-native';
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import img from '../Assets/goku.png';
-import {Icon} from 'react-native-vector-icons/Icon';
 import FontAwesome5Icon from 'react-native-vector-icons/FontAwesome5';
 import {MyProfileModal} from '../Components';
+import {getMe} from '../Utilities/StoreMe';
+import {RootState} from '../Redux/store/store';
+import {useSelector} from 'react-redux';
 
-const Profile = () => {
+interface Props {
+  navigation: any;
+}
+
+const Profile = ({navigation}: Props) => {
+  const me = useSelector((state: RootState) => state.me.me);
+
+  useEffect(() => {
+    getMe().then(res => {});
+  }, []);
   const [modalVisible, setModalVisible] = useState(false);
   const {width} = Dimensions.get('screen');
   return (
     <>
       <ImageBackground
-        source={img}
+        source={{uri: me.user.profilePic}}
         style={{
           flex: 1,
           justifyContent: 'center',
@@ -47,6 +58,7 @@ const Profile = () => {
           <MyProfileModal
             modalVisible={modalVisible}
             setModalVisible={setModalVisible}
+            navigation={navigation}
           />
           <View
             style={{
@@ -60,7 +72,7 @@ const Profile = () => {
               backgroundColor: 'black',
             }}>
             <Image
-              source={img}
+              source={{uri: me.user.profilePic}}
               resizeMode="contain"
               style={{width: 250, height: 250}}
             />
