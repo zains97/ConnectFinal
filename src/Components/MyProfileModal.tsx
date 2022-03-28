@@ -35,6 +35,7 @@ const OtherProfileModal = ({
             style={styles.modalPress}
             onPress={() => {
               setModalVisible(!modalVisible);
+              navigation.navigate('UpdateProfile');
             }}>
             <Text style={styles.textStyle}>Update Profile Info</Text>
           </TouchableOpacity>

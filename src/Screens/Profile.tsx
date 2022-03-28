@@ -8,7 +8,6 @@ import {
   Dimensions,
 } from 'react-native';
 import React, {useEffect, useState} from 'react';
-import img from '../Assets/goku.png';
 import FontAwesome5Icon from 'react-native-vector-icons/FontAwesome5';
 import {MyProfileModal} from '../Components';
 import {getMe} from '../Utilities/StoreMe';
@@ -78,7 +77,9 @@ const Profile = ({navigation}: Props) => {
             />
           </View>
           <View style={{marginVertical: 10}}>
-            <Text style={{color: 'white', fontSize: 24}}>Zain Saleem</Text>
+            <Text style={{color: 'white', fontSize: 24}}>
+              {me.user.firstName} {me.user.lastName}
+            </Text>
           </View>
           <View
             style={{

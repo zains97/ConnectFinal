@@ -17,7 +17,7 @@ import {useSelector} from 'react-redux';
 const image = require('../Assets/goku.png');
 
 interface Props {
-  navigation: {navigate: any};
+  navigation: {jumpTo: any};
 }
 
 const Publish = ({navigation}: Props) => {
@@ -116,7 +116,7 @@ const Publish = ({navigation}: Props) => {
           me.user.firstName,
         );
         Alert.alert('Post created');
-        setTimeout(() => navigation.navigate('MainApp'), 2000);
+        setTimeout(() => navigation.jumpTo('Home'), 2000);
       } else {
         Alert.alert('You must select a tag.');
       }
@@ -147,7 +147,7 @@ const Publish = ({navigation}: Props) => {
               alignItems: 'center',
             }}>
             <Image
-              source={image}
+              source={{uri: me.user.profilePic}}
               style={{
                 width: 50,
                 height: 50,
@@ -156,7 +156,9 @@ const Publish = ({navigation}: Props) => {
               }}
               resizeMode="cover"
             />
-            <Text style={{color: 'black', fontSize: 16, left: 10}}>Zain</Text>
+            <Text style={{color: 'black', fontSize: 16, left: 10}}>
+              {me.user.firstName}
+            </Text>
           </View>
           <View
             style={{width: '100%', height: 1, backgroundColor: 'lightgrey'}}

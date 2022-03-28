@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {
   View,
   Text,
@@ -8,16 +8,29 @@ import {
   Dimensions,
 } from 'react-native';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
+import {getUser} from '../Api/userApis';
 import OtherProfileModal from '../Components/OtherProfileModal';
+import {IUser} from '../Interfaces/UserInterface';
 
-const OtherProfile = ({navigation: {}}) => {
+interface Props {
+  route: {params: {userId: string}};
+  navigation: object;
+  userId: string;
+}
+const OtherProfile = ({route, navigation, userId}: Props) => {
+  const [user, setUser] = useState<IUser>();
+  useEffect(() => {
+    getUser(route.params.userId).then(res => {
+      setUser(res);
+    });
+  }, []);
   const [modalVisible, setModalVisible] = useState(false);
   const {width} = Dimensions.get('screen');
-  const image = require('../Assets/goku.png');
+
   return (
     <>
       <ImageBackground
-        source={image}
+        source={{uri: user?.profilePic}}
         style={{
           flex: 1,
           justifyContent: 'center',
@@ -58,13 +71,15 @@ const OtherProfile = ({navigation: {}}) => {
               backgroundColor: 'black',
             }}>
             <Image
-              source={image}
+              source={{uri: user?.profilePic}}
               resizeMode="contain"
               style={{width: 250, height: 250}}
             />
           </View>
           <View style={{marginVertical: 10}}>
-            <Text style={{color: 'white', fontSize: 24}}>Ahsan here</Text>
+            <Text style={{color: 'white', fontSize: 24}}>
+              {user?.firstName} {user?.lastName}
+            </Text>
           </View>
           <View
             style={{

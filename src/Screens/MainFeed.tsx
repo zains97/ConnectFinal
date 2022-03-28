@@ -24,10 +24,10 @@ type Props = {
 const {width} = Dimensions.get('screen');
 
 const MainFeed = ({navigation}: Props) => {
-  const LeftContent = (image: any) => (
+  const LeftContent = (image: any, userId: string) => (
     <TouchableOpacity
       onPress={() => {
-        navigation.navigate('OtherProfile');
+        navigation.navigate('OtherProfile', {userId}); //Add props for navigation UserID
       }}>
       <Avatar.Image size={40} source={{uri: image}} />
     </TouchableOpacity>
@@ -72,7 +72,7 @@ const MainFeed = ({navigation}: Props) => {
               <Card.Title
                 title={item.creatorName}
                 subtitle={item.createDate.toString()}
-                left={() => LeftContent(item.creatorImage)}
+                left={() => LeftContent(item.creatorImage, item.creator)}
                 titleStyle={{fontSize: 16}}
               />
 
