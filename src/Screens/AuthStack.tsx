@@ -9,6 +9,7 @@ import {
   MainApp,
   OtherProfile,
   UpdateProfile,
+  FriendRequests,
 } from '.';
 import Profile from './Profile';
 import {Header} from '../Components';
@@ -37,6 +38,16 @@ const AuthStack = (props: Props) => {
       <Stack.Screen
         name="UpdateProfile"
         component={UpdateProfile}
+        options={{
+          headerShown: true,
+          headerTitle: props => <Header />,
+          headerStyle: styles.headerStyle,
+          headerBackVisible: false,
+        }}
+      />
+      <Stack.Screen
+        name="FriendRequests"
+        component={FriendRequests}
         options={{
           headerShown: true,
           headerTitle: props => <Header />,

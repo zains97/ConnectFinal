@@ -2,17 +2,17 @@ import React, {useEffect, useState} from 'react';
 import {
   Image,
   Modal,
-  Pressable,
   StyleSheet,
   Text,
-  Touchable,
   TouchableOpacity,
   View,
+  PermissionsAndroid,
+  Platform,
 } from 'react-native';
 import MapView, {Callout, Marker} from 'react-native-maps';
-import Geolocation from 'react-native-geolocation-service';
 import {useSelector} from 'react-redux';
 import {RootState} from '../Redux/store/store';
+import {getLocation} from '../Utilities/Permissions';
 
 export default function App({navigation}: any) {
   const [modalVisible, setModalVisible] = useState(false);
@@ -22,18 +22,40 @@ export default function App({navigation}: any) {
     latitudeDelta: 0.3,
     longitudeDelta: 0.3,
   });
+  const [myLocation, setMyLocation] = useState({
+    latitude: 24.8607,
+    longitude: 67.0961,
+  });
   const me = useSelector((state: RootState) => state.me.me);
   useEffect(() => {
-    console.log('Hello');
+    getLocation(setMyLocation);
+    console.log('Coordinates: ', myLocation);
   }, []);
-
+  const image = require('../Assets/goku.png');
   return (
     <View style={styles.container}>
       <MapView style={styles.map} initialRegion={currentLocation}>
         <Marker
-          coordinate={currentLocation}
-          onPress={() => setModalVisible(!modalVisible)}
-        />
+          coordinate={myLocation}
+          onPress={() => setModalVisible(!modalVisible)}>
+          <View
+            style={{
+              borderRadius: 50,
+              height: 40,
+              width: 40,
+              borderColor: 'red',
+              borderWidth: 2,
+              justifyContent: 'center',
+              alignItems: 'center',
+            }}>
+            <Image
+              source={{
+                uri: 'https://www.dmarge.com/wp-content/uploads/2021/01/dwayne-the-rock-.jpg',
+              }}
+              style={{height: 38, width: 38, borderRadius: 50}}
+            />
+          </View>
+        </Marker>
       </MapView>
       <View style={styles.topHeader}>
         <TouchableOpacity onPress={() => navigation.navigate('Profile')}>
@@ -70,9 +92,11 @@ export default function App({navigation}: any) {
                   margin: 10,
                 }}
               />
-              <Text style={styles.modalText}>Zain Saleem</Text>
+              <View>
+                <Text style={styles.modalText}>Zain Saleem</Text>
+                <Text style={styles.kmText}>120km away</Text>
+              </View>
             </View>
-            <Text style={styles.modalText}>120km away</Text>
           </View>
         </View>
       </Modal>
@@ -105,7 +129,7 @@ const styles = StyleSheet.create({
     margin: 20,
     backgroundColor: 'white',
     borderRadius: 20,
-    padding: 35,
+    padding: 20,
     alignItems: 'center',
     shadowColor: '#000',
     shadowOffset: {
@@ -133,9 +157,13 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
   modalText: {
-    textAlign: 'center',
     color: 'black',
     fontSize: 20,
+    fontWeight: '700',
+  },
+  kmText: {
+    color: 'black',
+    fontSize: 15,
     fontWeight: '700',
   },
 });

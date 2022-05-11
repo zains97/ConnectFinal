@@ -12,3 +12,4 @@ export {default as MainFeed} from './MainFeed';
 export {default as OtherProfile} from './OtherProfile';
 export {default as Test} from './Test';
 export {default as UpdateProfile} from './UpdateProfile';
+export {default as FriendRequests} from './FriendRequests';

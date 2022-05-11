@@ -209,6 +209,26 @@ const Publish = ({navigation}: Props) => {
               borderRadius: 5,
               backgroundColor: '#3b82f6',
               marginHorizontal: 5,
+              marginVertical: 5,
+              borderWidth: 2,
+              borderColor: '#1e40af',
+              justifyContent: 'center',
+              alignItems: 'center',
+            }}>
+            <Text style={{color: 'white', fontSize: 16}}>Upload Image</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            activeOpacity={0.6}
+            onPress={() => {
+              publishPost();
+            }}
+            style={{
+              width: width * 0.5,
+              padding: 6,
+              borderRadius: 5,
+              backgroundColor: '#3b82f6',
+              marginHorizontal: 5,
+              marginVertical: 5,
               borderWidth: 2,
               borderColor: '#1e40af',
               justifyContent: 'center',

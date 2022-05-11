@@ -47,6 +47,20 @@ const OtherProfileModal = ({
             <Text style={styles.textStyle}>Upload picture</Text>
           </TouchableOpacity>
           <TouchableOpacity
+            style={styles.modalPress}
+            onPress={() => {
+              navigation.navigate('FriendRequests');
+            }}>
+            <Text style={styles.textStyle}>Friend Requests</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={styles.modalPressWarning}
+            onPress={() => {
+              setModalVisible(!modalVisible);
+            }}>
+            <Text style={styles.textStyle}>Close Menu</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
             style={styles.modalPressWarning}
             onPress={() => {
               storeMe(null);

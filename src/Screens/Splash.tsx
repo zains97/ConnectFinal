@@ -19,9 +19,9 @@ const Splash = ({navigation}: Props) => {
       }
       setTimeout(() => {
         if (res) {
-          navigation.navigate('MainApp');
+          navigation.replace('MainApp');
         } else {
-          navigation.navigate('Login');
+          navigation.replace('Login');
         }
       }, 2000);
     });

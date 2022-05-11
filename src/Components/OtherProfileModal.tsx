@@ -7,14 +7,16 @@ import {
   TouchableOpacity,
 } from 'react-native';
 import React, {useState} from 'react';
+import {IUser} from '../Interfaces/UserInterface';
 
 interface Props {
   modalVisible: boolean;
   setModalVisible: any;
+  user: any;
 }
 
 const {width} = Dimensions.get('screen');
-const OtherProfileModal = ({modalVisible, setModalVisible}: Props) => {
+const OtherProfileModal = ({modalVisible, setModalVisible, user}: Props) => {
   return (
     <Modal
       animationType="fade"
@@ -27,8 +29,15 @@ const OtherProfileModal = ({modalVisible, setModalVisible}: Props) => {
         <View style={styles.modalView}>
           <TouchableOpacity
             style={styles.modalPress}
+            onPress={() => {
+              setModalVisible(!modalVisible);
+            }}>
+            <Text style={styles.textStyle}>Send Friend Request</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={styles.modalPressWarning}
             onPress={() => setModalVisible(!modalVisible)}>
-            <Text style={styles.textStyle}>Add Friend</Text>
+            <Text style={styles.textStyle}>Close Menu</Text>
           </TouchableOpacity>
           <TouchableOpacity
             style={styles.modalPressWarning}
@@ -53,7 +62,7 @@ const styles = StyleSheet.create({
     margin: 20,
     backgroundColor: 'white',
     borderRadius: 20,
-    padding: 35,
+    padding: 25,
     alignItems: 'center',
     shadowColor: '#000',
     shadowOffset: {
@@ -76,7 +85,7 @@ const styles = StyleSheet.create({
   },
   modalPress: {
     padding: 10,
-    width: width * 0.4,
+    width: width * 0.5,
     borderRadius: 5,
     backgroundColor: '#3b82f6',
     marginVertical: 10,
@@ -84,7 +93,7 @@ const styles = StyleSheet.create({
 
   modalPressWarning: {
     padding: 10,
-    width: width * 0.4,
+    width: width * 0.5,
     borderRadius: 5,
     backgroundColor: '#f43f5e',
     marginVertical: 10,
