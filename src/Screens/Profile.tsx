@@ -20,7 +20,6 @@ interface Props {
 
 const Profile = ({navigation}: Props) => {
   const me = useSelector((state: RootState) => state.me.me);
-  console.log(me);
   useEffect(() => {
     getMe().then(res => {});
   }, []);
