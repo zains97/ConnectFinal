@@ -1,19 +1,22 @@
 import {StyleSheet, Text, View, Image, TouchableOpacity} from 'react-native';
 import React from 'react';
 
-type Props = {};
+type Props = {
+  name: String;
+  profilePic: String;
+};
 
-const FriendRequest = (props: Props) => {
+const FriendRequest = ({name, profilePic}: Props) => {
   return (
     <View style={styles.container}>
       <View style={styles.info}>
         <Image
           source={{
-            uri: 'https://www.dmarge.com/wp-content/uploads/2021/01/dwayne-the-rock-.jpg',
+            uri: profilePic as any,
           }}
           style={styles.image}
         />
-        <Text style={styles.name}>Zain Saleem</Text>
+        <Text style={styles.name}>{name}</Text>
       </View>
       <View style={styles.buttonsContainer}>
         <TouchableOpacity style={styles.buttonBlue}>

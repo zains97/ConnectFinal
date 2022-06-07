@@ -14,3 +14,16 @@ export interface IUser {
   postID: [];
   profilePic: string;
 }
+
+export interface IFriendRequest {
+  __v: Number;
+  _id: String;
+  recipient: String;
+  requester: {
+    _id: String;
+    name: String;
+    profilePic: any;
+    userId: String;
+  };
+  status: String;
+}

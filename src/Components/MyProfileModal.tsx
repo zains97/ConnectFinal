@@ -49,6 +49,7 @@ const OtherProfileModal = ({
           <TouchableOpacity
             style={styles.modalPress}
             onPress={() => {
+              setModalVisible(!modalVisible);
               navigation.navigate('FriendRequests');
             }}>
             <Text style={styles.textStyle}>Friend Requests</Text>
