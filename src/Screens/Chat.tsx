@@ -1,13 +1,19 @@
-import {StyleSheet, Text, View} from 'react-native';
+import {StyleSheet} from 'react-native';
 import React from 'react';
+import {createMaterialTopTabNavigator} from '@react-navigation/material-top-tabs';
+import {VideoCall, VoiceCall, TextChat} from '.';
+
+const ChatTab = createMaterialTopTabNavigator();
 
 type Props = {};
 
 const Chat = (props: Props) => {
   return (
-    <View style={styles.container}>
-      <Text>Chat</Text>
-    </View>
+    <ChatTab.Navigator transitionStyle="scroll">
+      <ChatTab.Screen name="Text Chat" component={TextChat} />
+      <ChatTab.Screen name="Voice Call" component={VoiceCall} />
+      <ChatTab.Screen name="Video Call" component={VideoCall} />
+    </ChatTab.Navigator>
   );
 };
 

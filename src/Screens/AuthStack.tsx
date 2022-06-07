@@ -10,6 +10,7 @@ import {
   OtherProfile,
   UpdateProfile,
   FriendRequests,
+  Chatroom,
 } from '.';
 import Profile from './Profile';
 import {Header} from '../Components';
@@ -55,6 +56,7 @@ const AuthStack = (props: Props) => {
           headerBackVisible: false,
         }}
       />
+      <Stack.Screen name="Chatroom" component={Chatroom} />
     </Stack.Navigator>
   );
 };

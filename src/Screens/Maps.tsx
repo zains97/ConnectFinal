@@ -31,7 +31,7 @@ export default function App({navigation}: any) {
     getLocation(setMyLocation);
     console.log('Coordinates: ', myLocation);
   }, []);
-  const image = require('../Assets/goku.png');
+
   return (
     <View style={styles.container}>
       <MapView style={styles.map} initialRegion={currentLocation}>

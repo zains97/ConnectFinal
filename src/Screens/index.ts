@@ -13,3 +13,7 @@ export {default as OtherProfile} from './OtherProfile';
 export {default as Test} from './Test';
 export {default as UpdateProfile} from './UpdateProfile';
 export {default as FriendRequests} from './FriendRequests';
+export {default as VoiceCall} from './VoiceCall';
+export {default as VideoCall} from './VideoCall';
+export {default as TextChat} from './TextChat';
+export {default as Chatroom} from './Chatroom';
