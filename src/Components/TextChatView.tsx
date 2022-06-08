@@ -33,7 +33,7 @@ const TextChatView = ({navigation}: Props) => {
       </TouchableOpacity>
       <View style={{flex: 4}}>
         <Text style={styles.heading}>Zain Saleem</Text>
-        <Text style={styles.message}>Hi ther this is my first message!</Text>
+        <Text style={styles.message}>Hi there, this is my first message!</Text>
       </View>
       <View
         style={{
