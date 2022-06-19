@@ -1,6 +1,5 @@
 import {StyleSheet, Text, View, Dimensions, Image} from 'react-native';
 import React, {useEffect, useState} from 'react';
-import Ionicons from 'react-native-vector-icons/Ionicons';
 import {Button, TextInput, TouchableRipple} from 'react-native-paper';
 import logo from '../Assets/modifiedConnectLogo.png';
 import DatePicker from 'react-native-date-picker';
@@ -138,12 +137,11 @@ const SignUp = ({navigation}: Props) => {
             }}
           />
         </View>
-
         <Button
           mode="contained"
           style={styles.signUpButton}
           onPress={() => {
-            console.log('Working');
+            navigation.navigate('SignUp2');
           }}>
           Next
         </Button>

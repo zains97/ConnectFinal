@@ -10,9 +10,11 @@ import {
 import React from 'react';
 import FontAwesome5Icon from 'react-native-vector-icons/FontAwesome5';
 import {Button, TextInput} from 'react-native-paper';
+import {io} from 'socket.io-client';
 
 type Props = {};
 
+const SERVER = 'http://192.168.0.106:4050';
 const {width} = Dimensions.get('screen');
 
 const messages = [
@@ -47,6 +49,7 @@ const messages = [
 ];
 
 const Chatroom = (props: Props) => {
+  let socket = io(SERVER);
   return (
     <View style={styles.chatRoomContainer}>
       <View style={styles.chatRoomHeader}>

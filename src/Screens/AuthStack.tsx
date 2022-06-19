@@ -14,6 +14,7 @@ import {
 } from '.';
 import Profile from './Profile';
 import {Header} from '../Components';
+import SignUp2 from './SignUp2';
 
 const Stack = createNativeStackNavigator();
 type Props = {};
@@ -26,6 +27,7 @@ const AuthStack = (props: Props) => {
       <Stack.Screen name="Splash" component={Splash} />
       <Stack.Screen name="Login" component={Login} />
       <Stack.Screen name="Signup" component={Signup} />
+      <Stack.Screen name="SignUp2" component={SignUp2} />
       <Stack.Screen name="MainApp" component={MainApp} />
       <Stack.Screen
         name="OtherProfile"

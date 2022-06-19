@@ -28,6 +28,8 @@ const initialState: IMeSlice = {
       password: '',
       postID: [],
       profilePic: '',
+      sentFriendRequests: [],
+      recievedFriendRequests: [],
     },
   },
 };

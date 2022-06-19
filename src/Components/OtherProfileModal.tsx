@@ -7,7 +7,12 @@ import {
   TouchableOpacity,
 } from 'react-native';
 import React, {useState} from 'react';
-import {IUser} from '../Interfaces/UserInterface';
+import {sendFriendRequest} from '../Api/friendsApi';
+import {useSelector} from 'react-redux';
+import {RootState} from '../Redux/store/store';
+import {storeMe} from '../Utilities/StoreMe';
+import {useDispatch} from 'react-redux';
+import {updateMeState} from '../Redux/slices/MeSlice';
 
 interface Props {
   modalVisible: boolean;
@@ -17,6 +22,8 @@ interface Props {
 
 const {width} = Dimensions.get('screen');
 const OtherProfileModal = ({modalVisible, setModalVisible, user}: Props) => {
+  const me = useSelector((state: RootState) => state.me.me);
+  const dispatch = useDispatch();
   return (
     <Modal
       animationType="fade"
@@ -29,7 +36,14 @@ const OtherProfileModal = ({modalVisible, setModalVisible, user}: Props) => {
         <View style={styles.modalView}>
           <TouchableOpacity
             style={styles.modalPress}
-            onPress={() => {
+            onPress={async () => {
+              await sendFriendRequest(me.user, user._id);
+
+              me.user.sentFriendRequests = [
+                ...me.user.sentFriendRequests,
+                user._id,
+              ];
+
               setModalVisible(!modalVisible);
             }}>
             <Text style={styles.textStyle}>Send Friend Request</Text>

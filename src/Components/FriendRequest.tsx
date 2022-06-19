@@ -1,12 +1,22 @@
 import {StyleSheet, Text, View, Image, TouchableOpacity} from 'react-native';
 import React from 'react';
+import {acceptFriendRequest} from '../Api/friendsApi';
 
 type Props = {
-  name: String;
+  requesterName: String;
+  requesterId: String;
   profilePic: String;
+  recipientId: String;
+  requestId: String;
 };
 
-const FriendRequest = ({name, profilePic}: Props) => {
+const FriendRequest = ({
+  requesterName,
+  profilePic,
+  recipientId,
+  requesterId,
+  requestId,
+}: Props) => {
   return (
     <View style={styles.container}>
       <View style={styles.info}>
@@ -16,10 +26,14 @@ const FriendRequest = ({name, profilePic}: Props) => {
           }}
           style={styles.image}
         />
-        <Text style={styles.name}>{name}</Text>
+        <Text style={styles.name}>{requesterName}</Text>
       </View>
       <View style={styles.buttonsContainer}>
-        <TouchableOpacity style={styles.buttonBlue}>
+        <TouchableOpacity
+          onPress={() => {
+            acceptFriendRequest(requesterId, recipientId, requestId);
+          }}
+          style={styles.buttonBlue}>
           <Text style={styles.buttonText}>Accept</Text>
         </TouchableOpacity>
         <TouchableOpacity style={styles.buttonRed}>

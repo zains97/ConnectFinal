@@ -1,7 +1,7 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 interface IMe {
-  user: object;
+  user: {};
   token: string;
 }
 

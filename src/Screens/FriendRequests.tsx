@@ -20,9 +20,12 @@ const FriendRequests = (props: Props) => {
 
   return (
     <View>
-      {friendRequests.map((friendRequest: IFriendRequest) => (
+      {friendRequests.map((friendRequest: IFriendRequest, index) => (
         <FriendRequest
-          name={friendRequest.requester.name}
+          recipientId={me.user._id}
+          requesterId={friendRequest.requester._id}
+          requestId={friendRequest._id}
+          requesterName={friendRequest.requester.name}
           profilePic={friendRequest.requester.profilePic}
         />
       ))}

@@ -7,6 +7,7 @@ export {default as MainApp} from './MainApp';
 export {default as Splash} from './Splash';
 export {default as Login} from './Login';
 export {default as Signup} from './Signup';
+export {default as Signup2} from './SignUp2';
 export {default as AuthStack} from './AuthStack';
 export {default as MainFeed} from './MainFeed';
 export {default as OtherProfile} from './OtherProfile';

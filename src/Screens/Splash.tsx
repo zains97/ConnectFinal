@@ -4,6 +4,7 @@ import logo from '../Assets/ConnectLogo.png';
 import {getMe} from '../Utilities/StoreMe';
 import {useDispatch} from 'react-redux';
 import {updateMeState} from '../Redux/slices/MeSlice';
+import {getUser} from '../Api/userApis';
 
 type Props = {
   navigation: any;
@@ -26,6 +27,22 @@ const Splash = ({navigation}: Props) => {
       }, 2000);
     });
   }, []);
+
+  // getMe().then(res => {
+  //   getUser(res.user._id).then(res => {
+  //     dispatch(updateMeState(res));
+  //   });
+  //   if (res) {
+  //   }
+  //   setTimeout(() => {
+  //     if (res) {
+  //       navigation.replace('MainApp');
+  //     } else {
+  //       navigation.replace('Login');
+  //     }
+  //   }, 2000);
+  // });
+  // }, []);
 
   return (
     <View style={styles.splashContainer}>

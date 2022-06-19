@@ -2,9 +2,11 @@ import {StyleSheet, Text, View, Dimensions, Image, Alert} from 'react-native';
 import React, {useEffect, useState} from 'react';
 import {Button, TextInput, TouchableRipple} from 'react-native-paper';
 import logo from '../Assets/modifiedConnectLogo.png';
-import {loginUser} from '../Api/userApis';
+import {getUser, loginUser} from '../Api/userApis';
 import {AxiosResponse} from 'axios';
 import {storeMe} from '../Utilities/StoreMe';
+import {IMe, updateMeState} from '../Redux/slices/MeSlice';
+import {useDispatch} from 'react-redux';
 
 type Props = {
   navigation: any;
@@ -12,9 +14,11 @@ type Props = {
 const {width} = Dimensions.get('screen');
 
 const Login = ({navigation}: Props) => {
+  const dispatch = useDispatch();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [secureTextEntry, setSecureTextEntry] = useState(true);
+  const [btnLoading, setBtnLoading] = useState<boolean>(false);
 
   return (
     <View style={styles.loginContainer}>
@@ -63,12 +67,20 @@ const Login = ({navigation}: Props) => {
           />
         </View>
         <Button
+          loading={btnLoading}
           mode="contained"
           style={styles.loginButton}
           onPress={() => {
+            setBtnLoading(!btnLoading);
             loginUser(email, password)
               .then(res => {
-                storeMe(res);
+                let storedUserObj: IMe = {
+                  token: res.token,
+                  user: res.user,
+                };
+                storeMe(storedUserObj);
+                dispatch(updateMeState(res));
+
                 navigation.navigate('MainApp');
               })
               .catch(err => {

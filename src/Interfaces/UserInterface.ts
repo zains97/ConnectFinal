@@ -13,6 +13,8 @@ export interface IUser {
   password: string;
   postID: [];
   profilePic: string;
+  sentFriendRequests: string[];
+  recievedFriendRequests: string[];
 }
 
 export interface IFriendRequest {

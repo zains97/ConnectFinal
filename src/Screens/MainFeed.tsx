@@ -17,6 +17,8 @@ import {
   Paragraph,
 } from 'react-native-paper';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
+import {useSelector} from 'react-redux';
+import {RootState} from '../Redux/store/store';
 
 type Props = {
   navigation: any;
@@ -24,6 +26,8 @@ type Props = {
 const {width} = Dimensions.get('screen');
 
 const MainFeed = ({navigation}: Props) => {
+  const me = useSelector((state: RootState) => state.me.me);
+  console.log('ME', me, '\n');
   const LeftContent = (image: any, userId: string) => (
     <TouchableOpacity
       onPress={() => {
