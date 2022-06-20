@@ -2,6 +2,7 @@ import {Image, ScrollView, StyleSheet, Text, View} from 'react-native';
 import React from 'react';
 import {TextChatView} from '../Components';
 
+
 type Props = {navigation: any};
 
 const TextChat = ({navigation}: Props) => {

@@ -26,7 +26,6 @@ const OtherProfile = ({route, navigation, userId}: Props) => {
   }, []);
   const [modalVisible, setModalVisible] = useState(false);
   const {width} = Dimensions.get('screen');
-  console.log(user?._id);
   return (
     <>
       <ImageBackground
@@ -58,7 +57,7 @@ const OtherProfile = ({route, navigation, userId}: Props) => {
           <OtherProfileModal
             modalVisible={modalVisible}
             setModalVisible={setModalVisible}
-            user={user || null}
+            userId={user?._id}
           />
           <View
             style={{

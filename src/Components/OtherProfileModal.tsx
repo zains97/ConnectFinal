@@ -13,17 +13,22 @@ import {RootState} from '../Redux/store/store';
 import {storeMe} from '../Utilities/StoreMe';
 import {useDispatch} from 'react-redux';
 import {updateMeState} from '../Redux/slices/MeSlice';
+import {IUser} from '../Interfaces/UserInterface';
+import {blockUser} from '../Api/userApis';
 
 interface Props {
   modalVisible: boolean;
   setModalVisible: any;
-  user: any;
+  userId: any;
 }
 
 const {width} = Dimensions.get('screen');
-const OtherProfileModal = ({modalVisible, setModalVisible, user}: Props) => {
+const OtherProfileModal = ({modalVisible, setModalVisible, userId}: Props) => {
   const me = useSelector((state: RootState) => state.me.me);
+  const [blockedUsers, setBlockedUsers] = useState(me.user.blockedUsers);
   const dispatch = useDispatch();
+
+  console.log('\nAHSAN:', userId);
   return (
     <Modal
       animationType="fade"
@@ -36,12 +41,28 @@ const OtherProfileModal = ({modalVisible, setModalVisible, user}: Props) => {
         <View style={styles.modalView}>
           <TouchableOpacity
             style={styles.modalPress}
+            onPress={() => {
+              setModalVisible(!modalVisible);
+            }}>
+            <Text style={styles.textStyle}>Unblock User</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={styles.modalPress}
+            onPress={() => {
+              blockUser(me.user._id, userId);
+
+              setModalVisible(!modalVisible);
+            }}>
+            <Text style={styles.textStyle}>Block User</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={styles.modalPress}
             onPress={async () => {
-              await sendFriendRequest(me.user, user._id);
+              await sendFriendRequest(me.user, userId);
 
               me.user.sentFriendRequests = [
                 ...me.user.sentFriendRequests,
-                user._id,
+                userId,
               ];
 
               setModalVisible(!modalVisible);
@@ -52,11 +73,6 @@ const OtherProfileModal = ({modalVisible, setModalVisible, user}: Props) => {
             style={styles.modalPressWarning}
             onPress={() => setModalVisible(!modalVisible)}>
             <Text style={styles.textStyle}>Close Menu</Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            style={styles.modalPressWarning}
-            onPress={() => setModalVisible(!modalVisible)}>
-            <Text style={styles.textStyle}>Block User</Text>
           </TouchableOpacity>
         </View>
       </View>

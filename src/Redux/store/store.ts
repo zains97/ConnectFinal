@@ -1,9 +1,11 @@
 import {configureStore} from '@reduxjs/toolkit';
 import meReducer from '../slices/MeSlice';
+import socketReducer from '../slices/SocketSlice';
 
 export const store = configureStore({
   reducer: {
     me: meReducer,
+    socket: socketReducer,
   },
 });
 

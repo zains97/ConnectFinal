@@ -10,11 +10,14 @@ import {
 import React from 'react';
 import FontAwesome5Icon from 'react-native-vector-icons/FontAwesome5';
 import {Button, TextInput} from 'react-native-paper';
+import {useSelector} from 'react-redux';
+import {RootState} from '../Redux/store/store';
 import {io} from 'socket.io-client';
+
+const SERVER = 'https://server-for-connect-app.herokuapp.com';
 
 type Props = {};
 
-const SERVER = 'http://192.168.0.106:4050';
 const {width} = Dimensions.get('screen');
 
 const messages = [
@@ -50,6 +53,12 @@ const messages = [
 
 const Chatroom = (props: Props) => {
   let socket = io(SERVER);
+
+  socket.on('connect', () => {
+    console.log('Connected to socket IO with ID:');
+  });
+
+  console.log('\nSOCKET: ', socket);
   return (
     <View style={styles.chatRoomContainer}>
       <View style={styles.chatRoomHeader}>

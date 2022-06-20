@@ -17,17 +17,19 @@ import {
   Paragraph,
 } from 'react-native-paper';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
-import {useSelector} from 'react-redux';
+import {useDispatch, useSelector} from 'react-redux';
 import {RootState} from '../Redux/store/store';
+import {getUser} from '../Api/userApis';
+import {storeMe} from '../Utilities/StoreMe';
+import {updateMeState} from '../Redux/slices/MeSlice';
 
 type Props = {
   navigation: any;
 };
 const {width} = Dimensions.get('screen');
-
 const MainFeed = ({navigation}: Props) => {
+  const dispatch = useDispatch();
   const me = useSelector((state: RootState) => state.me.me);
-  console.log('ME', me, '\n');
   const LeftContent = (image: any, userId: string) => (
     <TouchableOpacity
       onPress={() => {
@@ -36,6 +38,17 @@ const MainFeed = ({navigation}: Props) => {
       <Avatar.Image size={40} source={{uri: image}} />
     </TouchableOpacity>
   );
+
+  const updateUser = () => {
+    getUser(me.user._id).then(res => {
+      let temp = {
+        token: me.token,
+        user: res,
+      };
+      storeMe(temp);
+      dispatch(updateMeState(temp));
+    });
+  };
 
   const defaultPosts: IPost[] = [];
 
@@ -61,6 +74,7 @@ const MainFeed = ({navigation}: Props) => {
         setError(error);
         setLoading(false);
       });
+    updateUser();
   }, []);
 
   return (

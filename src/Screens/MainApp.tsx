@@ -10,6 +10,7 @@ type Props = {};
 const BottomTab = createBottomTabNavigator();
 
 const App = (props: Props) => {
+
   return (
     <BottomTab.Navigator
       backBehavior="history"

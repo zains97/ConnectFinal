@@ -1,7 +1,7 @@
 export interface IUser {
   __v: number;
   _id: string;
-  blockedUsers: [];
+  blockedUsers: any[];
   chatID: [];
   email: string;
   firstName: string;
