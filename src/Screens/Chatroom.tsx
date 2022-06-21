@@ -7,58 +7,70 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import FontAwesome5Icon from 'react-native-vector-icons/FontAwesome5';
 import {Button, TextInput} from 'react-native-paper';
 import {useSelector} from 'react-redux';
 import {RootState} from '../Redux/store/store';
 import {io} from 'socket.io-client';
+import { sendMessage } from '../Api/userApis';
 
-const SERVER = 'https://server-for-connect-app.herokuapp.com';
+const SERVER = 'http://192.168.0.106:3000';
 
 type Props = {};
 
 const {width} = Dimensions.get('screen');
 
-const messages = [
-  {id: 1, body: 'Hi there from zain.', sender: 'Me'},
-  {id: 2, body: 'Hi there from Ahsan.', sender: 'Other'},
-  {id: 3, body: 'Hi there from zain.', sender: 'Me'},
-  {id: 4, body: 'Hi there from Ahsan.', sender: 'Other'},
-  {id: 5, body: 'Hi there from Ahsan.', sender: 'Me'},
-  {id: 6, body: 'Hi there from Ahsan.', sender: 'Other'},
-  {id: 7, body: 'Hi there from Ahsan.', sender: 'Me'},
-  {id: 8, body: 'Hi there from Ahsan.', sender: 'Other'},
-  {id: 9, body: 'Hi there from Ahsan.', sender: 'Me'},
-  {id: 10, body: 'Hi there from Ahsan.', sender: 'Other'},
-  {id: 11, body: 'Hi there from Ahsan.', sender: 'Me'},
-  {id: 12, body: 'Hi there from Ahsan.', sender: 'Other'},
-  {
-    id: 13,
-    body: 'Hi there from Ahsan. there from Ahsan. there from Ahsan. there from Ahsan.',
-    sender: 'Me',
-  },
-  {
-    id: 14,
-    body: 'Hi there from Ahsan. there from Ahsan. there from Ahsan. there from Ahsan.',
+// const messages = [
+//   {id: 1, body: 'Hi there from zain.', sender: 'Me'},
+//   {id: 2, body: 'Hi there from Ahsan.', sender: 'Other'},
+//   {id: 3, body: 'Hi there from zain.', sender: 'Me'},
+//   {id: 4, body: 'Hi there from Ahsan.', sender: 'Other'},
+//   {id: 5, body: 'Hi there from Ahsan.', sender: 'Me'},
+//   {id: 6, body: 'Hi there from Ahsan.', sender: 'Other'},
+//   {id: 7, body: 'Hi there from Ahsan.', sender: 'Me'},
+//   {id: 8, body: 'Hi there from Ahsan.', sender: 'Other'},
+//   {id: 9, body: 'Hi there from Ahsan.', sender: 'Me'},
+//   {id: 10, body: 'Hi there from Ahsan.', sender: 'Other'},
+//   {id: 11, body: 'Hi there from Ahsan.', sender: 'Me'},
+//   {id: 12, body: 'Hi there from Ahsan.', sender: 'Other'},
+//   {
+//     id: 13,
+//     body: 'Hi there from Ahsan. there from Ahsan. there from Ahsan. there from Ahsan.',
+//     sender: 'Me',
+//   },
+//   {
+//     id: 14,
+//     body: 'Hi there from Ahsan. there from Ahsan. there from Ahsan. there from Ahsan.',
 
-    sender: 'Other',
-  },
-  {id: 15, body: 'Hi there from Ahsan.', sender: 'Me'},
-  {id: 16, body: 'Hi there from Ahsan.', sender: 'Other'},
-  {id: 17, body: 'Hi there from Ahsan.', sender: 'Me'},
-  {id: 18, body: 'Hi there from Ahsan.', sender: 'Other'},
-  {id: 19, body: 'Hi there from Ahsan.', sender: 'Me'},
-];
+//     sender: 'Other',
+//   },
+//   {id: 15, body: 'Hi there from Ahsan.', sender: 'Me'},
+//   {id: 16, body: 'Hi there from Ahsan.', sender: 'Other'},
+//   {id: 17, body: 'Hi there from Ahsan.', sender: 'Me'},
+//   {id: 18, body: 'Hi there from Ahsan.', sender: 'Other'},
+//   {id: 19, body: 'Hi there from Ahsan.', sender: 'Me'},
+// ];
 
 const Chatroom = (props: Props) => {
+  let [messageArr, setMessageArr] = useState<any[]>([]);
+  const [text, setText] = useState('');
+  const [toggler, setToggler] = useState(false);
+
   let socket = io(SERVER);
 
-  socket.on('connect', () => {
-    console.log('Connected to socket IO with ID:');
-  });
+  useEffect(() => {
+    socket.on('messages', data => {
+      console.log(data);
+      //data condition
+      setToggler(!toggler);
+    });
+  }, []);
 
-  console.log('\nSOCKET: ', socket);
+  useEffect(() => {
+    // get messages
+  }, [toggler]);
+
   return (
     <View style={styles.chatRoomContainer}>
       <View style={styles.chatRoomHeader}>
@@ -74,16 +86,22 @@ const Chatroom = (props: Props) => {
           <Text style={styles.headerName}>Zain Saleem</Text>
         </View>
         <View style={styles.headerIconsContainer}>
-          <FontAwesome5Icon size={20} name="phone" color={'white'} />
-          <FontAwesome5Icon size={20} name="video" color={'white'} />
-          <FontAwesome5Icon size={20} name="ellipsis-v" color={'white'} />
+          <TouchableOpacity>
+            <FontAwesome5Icon size={20} name="phone" color={'white'} />
+          </TouchableOpacity>
+          <TouchableOpacity>
+            <FontAwesome5Icon size={20} name="video" color={'white'} />
+          </TouchableOpacity>
+          <TouchableOpacity>
+            <FontAwesome5Icon size={20} name="ellipsis-v" color={'white'} />
+          </TouchableOpacity>
         </View>
       </View>
       <View style={styles.chatRoomBody}>
         <FlatList
           inverted
           style={{backgroundColor: '#eeeeee'}}
-          data={messages}
+          data={messageArr}
           renderItem={({item, index}) => {
             if (item.sender == 'Me') {
               return (
@@ -141,8 +159,22 @@ const Chatroom = (props: Props) => {
         />
       </View>
       <View style={styles.inputContainer}>
-        <TextInput style={styles.msgInput} placeholder={'Chat away!'} />
-        <Button style={{backgroundColor: '#1d4ed8', margin: 10}}>
+        <TextInput
+          value={text}
+          onChangeText={text => {
+            setText(text);
+          }}
+          style={styles.msgInput}
+          placeholder={'Chat away!'}
+        />
+        <Button
+          onPress={() => {
+            socket.emit('chat message', text);
+            setMessageArr([...messageArr, {sender: 'Me', body: text}]);
+            sendMessage(text,)
+            setText('');
+          }}
+          style={{backgroundColor: '#1d4ed8', margin: 10}}>
           <FontAwesome5Icon name="paper-plane" color="white" size={20} />
         </Button>
       </View>

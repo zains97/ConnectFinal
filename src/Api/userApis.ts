@@ -18,11 +18,35 @@ export const getUser = async (userId: string) => {
 };
 
 export const blockUser = async (userId: string, otherId: string) => {
-  console.log('API RUNNING');
   const url = `${hostURL}/api/user/block/${userId}`;
   axios.put(url, {toBlock: otherId}).then(res => {
     res.data.success
       ? Alert.alert('Succes', 'USER HAS BEEN BLOCKEd')
       : Alert.alert('Sorry', 'Failed to block user');
   });
+};
+
+export const unblockUser = async (userId: string, otherId: string) => {
+  const url = `${hostURL}/api/user/unblock/${userId}`;
+  axios.put(url, {toUnBlock: otherId}).then(res => {
+    res.data.success
+      ? Alert.alert('Succes', 'USER HAS BEEN BLOCKEd')
+      : Alert.alert('Sorry', 'Failed to block user');
+  });
+};
+
+export const sendMessage = async (body: string, to: string, from: string) => {
+  const url = `${hostURL}/api/message}`;
+  let data = await axios.post(url, {to, from, body});
+  return data;
+};
+
+export const getAllConversations = async () => {
+  const url = `${hostURL}/api/message/conversations`;
+  let data: any = await axios.get(url);
+  return data.data;
+};
+
+export const getAllFriends = (userId: string) => {
+  const url = `${hostURL}/api`;
 };

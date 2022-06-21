@@ -6,11 +6,9 @@ import {Header} from '../Components';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import FontAwesome5Icons from 'react-native-vector-icons/FontAwesome5';
 
-type Props = {};
 const BottomTab = createBottomTabNavigator();
 
 const App = (props: Props) => {
-
   return (
     <BottomTab.Navigator
       backBehavior="history"
