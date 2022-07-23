@@ -2,11 +2,10 @@ import {
   Dimensions,
   FlatList,
   StyleSheet,
-  Text,
   TouchableOpacity,
   View,
 } from 'react-native';
-import React, {useEffect} from 'react';
+import React from 'react';
 import {getAllPosts} from '../Api/postApis';
 import {IPost} from '../Interfaces/PostInterfaces';
 import {
@@ -27,9 +26,11 @@ type Props = {
   navigation: any;
 };
 const {width} = Dimensions.get('screen');
+
 const MainFeed = ({navigation}: Props) => {
   const dispatch = useDispatch();
   const me = useSelector((state: RootState) => state.me.me);
+
   const LeftContent = (image: any, userId: string) => (
     <TouchableOpacity
       onPress={() => {

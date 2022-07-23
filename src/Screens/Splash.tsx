@@ -16,6 +16,7 @@ const Splash = ({navigation}: Props) => {
   useEffect(() => {
     getMe().then(res => {
       if (res) {
+        console.log('My response:', res);
         dispatch(updateMeState(res));
       }
       setTimeout(() => {
@@ -27,22 +28,6 @@ const Splash = ({navigation}: Props) => {
       }, 2000);
     });
   }, []);
-
-  // getMe().then(res => {
-  //   getUser(res.user._id).then(res => {
-  //     dispatch(updateMeState(res));
-  //   });
-  //   if (res) {
-  //   }
-  //   setTimeout(() => {
-  //     if (res) {
-  //       navigation.replace('MainApp');
-  //     } else {
-  //       navigation.replace('Login');
-  //     }
-  //   }, 2000);
-  // });
-  // }, []);
 
   return (
     <View style={styles.splashContainer}>

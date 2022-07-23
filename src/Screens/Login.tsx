@@ -70,22 +70,16 @@ const Login = ({navigation}: Props) => {
           loading={btnLoading}
           mode="contained"
           style={styles.loginButton}
-          onPress={() => {
+          onPress={async () => {
             setBtnLoading(!btnLoading);
-            loginUser(email, password)
-              .then(res => {
-                let storedUserObj: IMe = {
-                  token: res.token,
-                  user: res.user,
-                };
-                storeMe(storedUserObj);
-                dispatch(updateMeState(res));
-
-                navigation.navigate('MainApp');
-              })
-              .catch(err => {
-                Alert.alert('INVALID LOGIN CREDENTIALS');
-              });
+            const {loginInfo} = await loginUser(email, password);
+            let {user, token} = loginInfo;
+            if (loginInfo) {
+              await storeMe({user, token});
+              dispatch(updateMeState({user, token}));
+              navigation.navigate('MainApp');
+            }
+            setBtnLoading(!btnLoading);
           }}>
           Log In
         </Button>

@@ -133,7 +133,7 @@ const SignUp2 = ({navigation}: Props) => {
               fontWeight: 'bold',
               color: 'black',
             }}>
-            Select Image:{' '}
+            Select Image:
           </Text>
           <Button
             mode="contained"
