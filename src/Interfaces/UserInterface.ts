@@ -1,8 +1,10 @@
 export interface IUser {
   __v: number;
   _id: string;
-  blockedUsers: any[];
+  blockedUsers: [];
   chatID: [];
+  currentLocation: string;
+  dob: any;
   email: string;
   firstName: string;
   friendsId: [];
@@ -15,6 +17,7 @@ export interface IUser {
   profilePic: string;
   sentFriendRequests: string[];
   recievedFriendRequests: string[];
+  suspendedTill: Number;
 }
 
 export interface IFriendRequest {

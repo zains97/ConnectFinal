@@ -13,7 +13,7 @@ import {Button, TextInput} from 'react-native-paper';
 import {useSelector} from 'react-redux';
 import {RootState} from '../Redux/store/store';
 import {io} from 'socket.io-client';
-import { sendMessage } from '../Api/userApis';
+import {sendMessage} from '../Api/userApis';
 
 const SERVER = 'http://192.168.0.106:3000';
 
@@ -171,7 +171,7 @@ const Chatroom = (props: Props) => {
           onPress={() => {
             socket.emit('chat message', text);
             setMessageArr([...messageArr, {sender: 'Me', body: text}]);
-            sendMessage(text,)
+            // sendMessage(text,)
             setText('');
           }}
           style={{backgroundColor: '#1d4ed8', margin: 10}}>

@@ -4,7 +4,6 @@ import logo from '../Assets/ConnectLogo.png';
 import {getMe} from '../Utilities/StoreMe';
 import {useDispatch} from 'react-redux';
 import {updateMeState} from '../Redux/slices/MeSlice';
-import {getUser} from '../Api/userApis';
 
 type Props = {
   navigation: any;
@@ -16,7 +15,6 @@ const Splash = ({navigation}: Props) => {
   useEffect(() => {
     getMe().then(res => {
       if (res) {
-        console.log('My response:', res);
         dispatch(updateMeState(res));
       }
       setTimeout(() => {

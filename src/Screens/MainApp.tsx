@@ -8,7 +8,7 @@ import FontAwesome5Icons from 'react-native-vector-icons/FontAwesome5';
 
 const BottomTab = createBottomTabNavigator();
 
-const App = (props: Props) => {
+const App = (props: any) => {
   return (
     <BottomTab.Navigator
       backBehavior="history"

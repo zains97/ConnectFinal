@@ -1,4 +1,5 @@
 import {
+  Alert,
   Dimensions,
   FlatList,
   StyleSheet,
@@ -28,8 +29,9 @@ type Props = {
 const {width} = Dimensions.get('screen');
 
 const MainFeed = ({navigation}: Props) => {
+  //Component start
   const dispatch = useDispatch();
-  const me = useSelector((state: RootState) => state.me.me);
+  const me = useSelector((state: RootState) => state.me.value);
 
   const LeftContent = (image: any, userId: string) => (
     <TouchableOpacity
@@ -41,27 +43,28 @@ const MainFeed = ({navigation}: Props) => {
   );
 
   const updateUser = () => {
-    getUser(me.user._id).then(res => {
-      let temp = {
-        token: me.token,
-        user: res,
-      };
-      storeMe(temp);
-      dispatch(updateMeState(temp));
-    });
+    let temp = {id: 1, name: 'TEMP'};
+    try {
+      getUser(me._id).then(res => {
+        storeMe(res);
+        dispatch(updateMeState(res));
+      });
+    } catch (error: any) {
+      setLoading(true);
+      Alert.alert(error);
+    }
   };
 
   const defaultPosts: IPost[] = [];
 
   const [posts, setPosts]: [IPost[], (posts: IPost[]) => void] =
     React.useState(defaultPosts);
-  const [loading, setLoading]: [boolean, (loading: boolean) => void] =
-    React.useState<boolean>(true);
-  const [error, setError]: [string, (error: string) => void] =
-    React.useState('');
+  const [loading, setLoading] = React.useState<boolean>(true);
+  const [error, setError] = React.useState('');
   const image = true;
 
   React.useEffect(() => {
+    updateUser();
     getAllPosts()
       .then(response => {
         setPosts(response);
@@ -75,7 +78,6 @@ const MainFeed = ({navigation}: Props) => {
         setError(error);
         setLoading(false);
       });
-    updateUser();
   }, []);
 
   return (

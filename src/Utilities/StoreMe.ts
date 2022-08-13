@@ -1,11 +1,7 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { IUser } from '../Interfaces/UserInterface';
 
-interface IMe {
-  user: {};
-  token: string;
-}
-
-export const storeMe = async (value: IMe | null) => {
+export const storeMe = async (value: IUser) => {
   try {
     const jsonValue = JSON.stringify(value);
     await AsyncStorage.setItem('Me', jsonValue);

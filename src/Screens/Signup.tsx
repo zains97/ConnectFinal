@@ -1,5 +1,5 @@
 import {StyleSheet, Text, View, Dimensions, Image} from 'react-native';
-import React, {useEffect, useState} from 'react';
+import React, {useState} from 'react';
 import {Button, TextInput, TouchableRipple} from 'react-native-paper';
 import logo from '../Assets/modifiedConnectLogo.png';
 import DatePicker from 'react-native-date-picker';
@@ -20,6 +20,23 @@ const SignUp = ({navigation}: Props) => {
 
   const [date, setDate] = useState<Date>(new Date('Mar 25 2015'));
   const [open, setOpen] = useState(false);
+
+  const navigate = (
+    email: String,
+    password: string,
+    firstName: String,
+    lastName: String,
+    date: Date,
+  ) => {
+    if (
+      firstName.length > 0 &&
+      lastName.length > 0 &&
+      date != null &&
+      password.length > 0
+    ) {
+      navigation.navigate('');
+    }
+  };
 
   return (
     <View style={styles.signUpContainer}>

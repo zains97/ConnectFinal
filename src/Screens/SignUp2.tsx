@@ -7,19 +7,29 @@ import {
   ScrollView,
   TouchableOpacity,
 } from 'react-native';
-import React, {useEffect, useState} from 'react';
-import Ionicons from 'react-native-vector-icons/Ionicons';
-import {Button, TextInput, TouchableRipple} from 'react-native-paper';
+import React, {useState} from 'react';
+import {Button} from 'react-native-paper';
 import logo from '../Assets/modifiedConnectLogo.png';
-import DatePicker from 'react-native-date-picker';
 import {ITags} from '../Interfaces/PostInterfaces';
+import Icon from 'react-native-vector-icons/Fontisto';
+import {signUpUser} from '../Api/userApis';
 
-type Props = {
-  navigation: any;
-};
 const {width} = Dimensions.get('screen');
 
-const SignUp2 = ({navigation}: Props) => {
+const genders = [
+  {
+    id: 1,
+    gender: 'male',
+  },
+  {
+    id: 2,
+    gender: 'female',
+  },
+];
+
+const SignUp2 = ({navigation}: any) => {
+  const [gender, setGender] = useState<string>('Male');
+
   const tags: ITags[] = [
     {
       id: 0,
@@ -96,6 +106,7 @@ const SignUp2 = ({navigation}: Props) => {
   ];
 
   const [tag, setTag] = useState<string[]>([]);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
 
   function removeItemOnce(arr: string[], value: string) {
     var index = arr.indexOf(value);
@@ -144,7 +155,7 @@ const SignUp2 = ({navigation}: Props) => {
             Pick Image
           </Button>
         </View>
-        <View>
+        <View style={{height: '45%'}}>
           <Text
             style={{
               marginHorizontal: 10,
@@ -168,8 +179,9 @@ const SignUp2 = ({navigation}: Props) => {
                   onPress={() => {
                     if (!tag.includes(data.name)) {
                       setTag([...tag, data.name]);
+                      console.log(tag);
                     } else {
-                      removeItemOnce(tag, data.name);
+                      setTag(tag.filter(item => item != data.name));
                     }
                   }}>
                   <View
@@ -196,15 +208,61 @@ const SignUp2 = ({navigation}: Props) => {
               ))}
             </View>
           </ScrollView>
+          <View
+            style={{
+              display: 'flex',
+              flexDirection: 'row',
+              alignSelf: 'center',
+            }}>
+            <Text
+              style={{alignSelf: 'center', fontWeight: 'bold', color: 'black'}}>
+              Select gender:
+            </Text>
+            {genders.map((data, index) => (
+              <TouchableOpacity
+                key={index}
+                onPress={() => setGender(data.gender)}
+                activeOpacity={0.6}
+                style={{
+                  width: 45,
+                  height: 45,
+                  backgroundColor: '#3b82f6',
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                  borderRadius: 40,
+                  marginHorizontal: 5,
+                  borderWidth: 3,
+                  borderColor: data.gender === gender ? '#1d4ed8' : '#3b82f6',
+                }}>
+                <View>
+                  <Icon
+                    color={'white'}
+                    name={data.gender}
+                    size={data.gender === gender ? 28 : 24}
+                  />
+                </View>
+              </TouchableOpacity>
+            ))}
+          </View>
+          <Button
+            disabled={isLoading}
+            mode="contained"
+            style={styles.signUpButton}
+            onPress={() => {
+              setIsLoading(true);
+              signUpUser(
+                'Aisha',
+                'Ali',
+                'aisha@hotmail.com',
+                'cdbgbcd',
+                gender,
+                tag,
+              );
+              setIsLoading(false);
+            }}>
+            Sign Up
+          </Button>
         </View>
-        <Button
-          mode="contained"
-          style={styles.signUpButton}
-          onPress={() => {
-            navigation.navigate('SignUp2');
-          }}>
-          Sign Up
-        </Button>
       </View>
     </View>
   );
@@ -223,6 +281,7 @@ const styles = StyleSheet.create({
     backgroundColor: 'white',
     borderTopRightRadius: 25,
     borderTopLeftRadius: 25,
+    display: 'flex',
   },
   logoContainer: {
     flex: 0.2,
@@ -241,6 +300,7 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     color: 'black',
     margin: 10,
+    textAlign: 'center',
   },
   signUpFormText: {
     color: 'gray',
@@ -258,6 +318,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#1d4ed8',
     height: 40,
     marginVertical: 20,
+    alignSelf: 'center',
   },
   dobButton: {
     flexDirection: 'row',

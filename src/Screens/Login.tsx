@@ -5,7 +5,7 @@ import logo from '../Assets/modifiedConnectLogo.png';
 import {getUser, loginUser} from '../Api/userApis';
 import {AxiosResponse} from 'axios';
 import {storeMe} from '../Utilities/StoreMe';
-import {IMe, updateMeState} from '../Redux/slices/MeSlice';
+import {updateMeState} from '../Redux/slices/MeSlice';
 import {useDispatch} from 'react-redux';
 
 type Props = {
@@ -71,15 +71,19 @@ const Login = ({navigation}: Props) => {
           mode="contained"
           style={styles.loginButton}
           onPress={async () => {
-            setBtnLoading(!btnLoading);
-            const {loginInfo} = await loginUser(email, password);
-            let {user, token} = loginInfo;
-            if (loginInfo) {
-              await storeMe({user, token});
-              dispatch(updateMeState({user, token}));
-              navigation.navigate('MainApp');
-            }
-            setBtnLoading(!btnLoading);
+            setBtnLoading(true);
+            loginUser(email, password)
+              .then(res => {
+                console.log('LOGIN RES: ', res.user);
+                storeMe(res.user);
+                dispatch(updateMeState(res.user));
+                navigation.navigate('MainApp');
+                setBtnLoading(false);
+              })
+              .catch(e => {
+                Alert.alert(e);
+                setBtnLoading(false);
+              });
           }}>
           Log In
         </Button>

@@ -19,7 +19,7 @@ interface Props {
 }
 
 const Profile = ({navigation}: Props) => {
-  const me = useSelector((state: RootState) => state.me.me);
+  const me = useSelector((state: RootState) => state.me.value);
   useEffect(() => {
     getMe().then(res => {});
   }, []);
@@ -28,7 +28,7 @@ const Profile = ({navigation}: Props) => {
   return (
     <>
       <ImageBackground
-        source={{uri: me.user.profilePic}}
+        source={{uri: me.profilePic}}
         style={{
           flex: 1,
           justifyContent: 'center',
@@ -70,14 +70,14 @@ const Profile = ({navigation}: Props) => {
               backgroundColor: 'black',
             }}>
             <Image
-              source={{uri: me.user.profilePic}}
+              source={{uri: me.profilePic}}
               resizeMode="contain"
               style={{width: 250, height: 250}}
             />
           </View>
           <View style={{marginVertical: 10}}>
             <Text style={{color: 'white', fontSize: 24}}>
-              {me.user.firstName} {me.user.lastName}
+              {me.firstName} {me.lastName}
             </Text>
           </View>
           <View

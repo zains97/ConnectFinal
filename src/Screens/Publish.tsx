@@ -14,14 +14,12 @@ import {newPost} from '../Api/postApis';
 import {RootState} from '../Redux/store/store';
 import {useSelector} from 'react-redux';
 
-const image = require('../Assets/goku.png');
-
 interface Props {
   navigation: {jumpTo: any};
 }
 
 const Publish = ({navigation}: Props) => {
-  const me = useSelector((state: RootState) => state.me.me);
+  const me = useSelector((state: RootState) => state.me.value);
 
   const {width} = Dimensions.get('screen');
   const tags: ITags[] = [
@@ -100,29 +98,20 @@ const Publish = ({navigation}: Props) => {
   ];
 
   const [postBody, setPostBody] = useState('');
-  const [tag, setTag] = useState<string>('');
-
+  const [selectedTags, setSelectedTags] = useState<string[]>(['']);
+  console.log('(PUBLISH) : Selected Tags :' + selectedTags);
   const publishPost = () => {
     if (postBody.length < 10) {
       Alert.alert('Post must be more than 10 characters long.');
     } else {
-      if (tag) {
-        console.log('TOKEN', me.user._id);
-        newPost(
-          postBody,
-          tag,
-          me.user._id,
-          me.user.profilePic,
-          me.user.firstName,
-        );
-        Alert.alert('Post created');
+      if (selectedTags.length > 0) {
+        newPost(postBody, selectedTags, me._id, me.profilePic, me.firstName);
         setTimeout(() => navigation.jumpTo('Home'), 2000);
       } else {
         Alert.alert('You must select a tag.');
       }
     }
   };
-
   return (
     <View style={{backgroundColor: 'white', flex: 1}}>
       <View style={{flex: 0.875}}>
@@ -147,7 +136,7 @@ const Publish = ({navigation}: Props) => {
               alignItems: 'center',
             }}>
             <Image
-              source={{uri: me.user.profilePic}}
+              source={{uri: me.profilePic}}
               style={{
                 width: 50,
                 height: 50,
@@ -157,7 +146,7 @@ const Publish = ({navigation}: Props) => {
               resizeMode="cover"
             />
             <Text style={{color: 'black', fontSize: 16, left: 10}}>
-              {me.user.firstName}
+              {me.firstName}
             </Text>
           </View>
           <View
@@ -170,10 +159,19 @@ const Publish = ({navigation}: Props) => {
                 marginHorizontal: 10,
                 flexDirection: 'row',
               }}>
-              {tags.map(data => (
+              {tags.map((data, index) => (
                 <TouchableOpacity
+                  key={index}
                   activeOpacity={0.6}
-                  onPress={() => setTag(data.name)}>
+                  onPress={() => {
+                    if (!selectedTags.includes(data.name)) {
+                      setSelectedTags([...selectedTags, data.name]);
+                    } else {
+                      setSelectedTags(
+                        selectedTags.filter(tag => tag != data.name),
+                      );
+                    }
+                  }}>
                   <View
                     style={{
                       padding: 6,
@@ -181,13 +179,17 @@ const Publish = ({navigation}: Props) => {
                       backgroundColor: '#3b82f6',
                       marginHorizontal: 5,
                       borderWidth: 3,
-                      borderColor: data.name === tag ? '#1d4ed8' : '#3b82f6',
+                      borderColor: selectedTags.includes(data.name)
+                        ? '#1d4ed8'
+                        : '#3b82f6',
                     }}>
                     <Text
                       style={{
                         color: 'white',
-                        fontSize: data.name === tag ? 18 : 16,
-                        fontWeight: data.name === tag ? 'bold' : 'normal',
+                        fontSize: selectedTags.includes(data.name) ? 18 : 16,
+                        fontWeight: selectedTags.includes(data.name)
+                          ? 'bold'
+                          : 'normal',
                       }}>
                       {data.name}
                     </Text>

@@ -1,7 +1,7 @@
 import axios from 'axios';
 import {Alert} from 'react-native';
 
-const hostURL = 'http://192.168.0.107:3000';
+const hostURL = 'http://192.168.0.104:5000';
 
 export const loginUser = async (email: string, password: string) => {
   try {
@@ -55,4 +55,35 @@ export const getAllConversations = async () => {
 
 export const getAllFriends = (userId: string) => {
   const url = `${hostURL}/api`;
+};
+
+export const signUpUser = (
+  firstName: string,
+  lastName: string,
+  email: string,
+  password: string,
+  gender: string,
+  interests: string[],
+) => {
+  const url = `${hostURL}/api/auth/register`;
+
+  let body = {
+    firstName,
+    lastName,
+    email,
+    password,
+    gender,
+    interests,
+  };
+  console.log('Running');
+
+  axios
+    .post(url, body)
+    .then(res => {
+      console.log(res.data);
+      console.log('TEST');
+    })
+    .catch(e => {
+      return Alert.alert('Falied', e);
+    });
 };

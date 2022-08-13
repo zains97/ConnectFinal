@@ -1,36 +1,30 @@
 import {createSlice, PayloadAction} from '@reduxjs/toolkit';
 import {IUser} from '../../Interfaces/UserInterface';
 
-export interface IMe {
-  token: string;
-  user: IUser;
+export interface UserState {
+  value: IUser;
 }
-
-export interface IMeSlice {
-  me: IMe;
-}
-
-const initialState: IMeSlice = {
-  me: {
-    token: '',
-    user: {
-      __v: 0,
-      _id: '',
-      blockedUsers: [],
-      chatID: [],
-      email: '',
-      firstName: '',
-      friendsId: [],
-      gender: '',
-      interests: [],
-      isAdmin: false,
-      lastName: '',
-      password: '',
-      postID: [],
-      profilePic: '',
-      sentFriendRequests: [],
-      recievedFriendRequests: [],
-    },
+const initialState: UserState = {
+  value: {
+    __v: 0,
+    _id: '',
+    blockedUsers: [],
+    chatID: [],
+    email: '',
+    firstName: '',
+    friendsId: [],
+    gender: '',
+    interests: [],
+    isAdmin: false,
+    lastName: '',
+    password: '',
+    postID: [],
+    profilePic: '',
+    sentFriendRequests: [],
+    recievedFriendRequests: [],
+    currentLocation: '',
+    dob: 0,
+    suspendedTill: 0,
   },
 };
 
@@ -38,8 +32,8 @@ export const meSlice = createSlice({
   name: 'me',
   initialState,
   reducers: {
-    updateMeState: (state, action: PayloadAction<IMe>) => {
-      state.me = action.payload;
+    updateMeState: (state, action: PayloadAction<IUser>) => {
+      state.value = action.payload;
     },
   },
 });

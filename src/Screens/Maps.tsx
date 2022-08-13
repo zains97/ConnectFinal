@@ -26,7 +26,7 @@ export default function App({navigation}: any) {
     latitude: 24.8607,
     longitude: 67.0961,
   });
-  const me = useSelector((state: RootState) => state.me.me);
+  const me = useSelector((state: RootState) => state.me.value);
   useEffect(() => {
     getLocation(setMyLocation);
     console.log('Coordinates: ', myLocation);
@@ -61,7 +61,7 @@ export default function App({navigation}: any) {
         <TouchableOpacity onPress={() => navigation.navigate('Profile')}>
           <Image
             source={{
-              uri: me.user.profilePic,
+              uri: me.profilePic,
             }}
             style={{height: 40, width: 40, borderRadius: 50}}
           />
