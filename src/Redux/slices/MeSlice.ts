@@ -33,6 +33,7 @@ export const meSlice = createSlice({
   initialState,
   reducers: {
     updateMeState: (state, action: PayloadAction<IUser>) => {
+      console.log('ACTION.PAYLOAD: ', action.payload);
       state.value = action.payload;
     },
   },

@@ -20,7 +20,7 @@ import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityI
 import {useDispatch, useSelector} from 'react-redux';
 import {RootState} from '../Redux/store/store';
 import {getUser} from '../Api/userApis';
-import {storeMe} from '../Utilities/StoreMe';
+import {getMe, storeMe} from '../Utilities/StoreMe';
 import {updateMeState} from '../Redux/slices/MeSlice';
 
 type Props = {
@@ -40,18 +40,20 @@ const MainFeed = ({navigation}: Props) => {
       <Avatar.Image size={40} source={{uri: image}} />
     </TouchableOpacity>
   );
-  const updateUser = () => {
-    try {
-      getUser(me._id).then(res => {
-        console.log('MAIN FEED RES: ', res);
-        storeMe(res);
-        dispatch(updateMeState(res));
-      });
-    } catch (error: any) {
-      setLoading(true);
-      Alert.alert(error);
-    }
-  };
+  // const updateUser = () => {
+  //   console.log('ME STATE REDUX: ', me._id);
+
+  //   try {
+  //     getUser(me._id).then(res => {
+  //       console.log('MAIN FEED RES: ', res);
+  //       storeMe(res);
+  //       dispatch(updateMeState(res));
+  //     });
+  //   } catch (error: any) {
+  //     setLoading(true);
+  //     Alert.alert(error);
+  //   }
+  // };
 
   const defaultPosts: IPost[] = [];
 
@@ -61,10 +63,10 @@ const MainFeed = ({navigation}: Props) => {
   const [error, setError] = React.useState('');
   const image = true;
 
-  React.useEffect(() => {
-    console.log(me);
-    updateUser();
-  }, []);
+  // React.useEffect(() => {
+  //   // getMe().then(res => console.log('GETME RES MAIN FEED : ', res));
+  //   updateUser();
+  // }, []);
 
   React.useEffect(() => {
     getAllPosts()

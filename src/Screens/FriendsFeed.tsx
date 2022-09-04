@@ -36,18 +36,6 @@ const FriendsFeed = ({navigation}: any) => {
       <Avatar.Image size={40} source={{uri: image}} />
     </TouchableOpacity>
   );
-  const updateUser = () => {
-    let temp = {id: 1, name: 'TEMP'};
-    try {
-      getUser(me._id).then(res => {
-        storeMe(res);
-        dispatch(updateMeState(res));
-      });
-    } catch (error: any) {
-      setLoading(true);
-      Alert.alert(error);
-    }
-  };
 
   const defaultPosts: IPost[] = [];
 
@@ -58,7 +46,6 @@ const FriendsFeed = ({navigation}: any) => {
   const image = true;
 
   React.useEffect(() => {
-    updateUser();
     getFriendsPosts(me.friendsId)
       .then(response => {
         setPosts(response);

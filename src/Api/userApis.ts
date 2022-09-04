@@ -1,7 +1,7 @@
 import axios from 'axios';
 import {Alert} from 'react-native';
 
-const hostURL = 'http://192.168.0.104:5000';
+const hostURL = 'http://192.168.1.105:5000';
 
 export const loginUser = async (email: string, password: string) => {
   try {
@@ -20,6 +20,7 @@ export const getUser = async (userId: string) => {
   try {
     const url = `${hostURL}/api/user/user/${userId}`;
     const user = await axios.get(url);
+    // console.log('API: ', user.data);
     return user.data;
   } catch (ex) {
     return Alert.alert('Sorry', String(ex));

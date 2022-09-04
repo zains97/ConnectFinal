@@ -1,9 +1,10 @@
 import {Image, StyleSheet, Text, View} from 'react-native';
 import React, {useEffect} from 'react';
 import logo from '../Assets/ConnectLogo.png';
-import {getMe} from '../Utilities/StoreMe';
+import {getMe, storeMe} from '../Utilities/StoreMe';
 import {useDispatch} from 'react-redux';
 import {updateMeState} from '../Redux/slices/MeSlice';
+import {getUser} from '../Api/userApis';
 
 type Props = {
   navigation: any;
@@ -14,8 +15,12 @@ const Splash = ({navigation}: Props) => {
 
   useEffect(() => {
     getMe().then(res => {
+      // console.log('SPLASH RES: ', res);
       if (res) {
-        dispatch(updateMeState(res));
+        getUser(res._id).then(() => {
+          dispatch(updateMeState(res));
+          storeMe(res);
+        });
       }
       setTimeout(() => {
         if (res) {
