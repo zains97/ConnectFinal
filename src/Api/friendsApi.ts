@@ -1,7 +1,8 @@
 import axios from 'axios';
+import {Alert} from 'react-native';
 import {IUser} from '../Interfaces/UserInterface';
 
-const hostURL = 'http://192.168.0.106:3000/api/friends';
+const hostURL = `http://192.168.0.104:5000/api/friends`;
 
 export const getFriendRequests = async (recipientId: string) => {
   try {
@@ -17,15 +18,16 @@ export const acceptFriendRequest = (
   recipientId: String,
   requestId: String,
 ) => {
-  try {
-    axios.post(`${hostURL}/confirm-request`, {
+  axios
+    .put(`${hostURL}/confirm-request`, {
       requesterId,
       recipientId,
       requestId,
-    });
-  } catch (error) {
-    console.log(error);
-  }
+    })
+    .then(res => {
+      console.log(res);
+    })
+    .catch(e => Alert.alert(e.message));
 };
 
 export const sendFriendRequest = async (
@@ -33,11 +35,11 @@ export const sendFriendRequest = async (
   recipient: String,
 ) => {
   try {
-    const data = await axios.post(`${hostURL}/send-request`, {
+    const {data} = await axios.post(`${hostURL}/send-request`, {
       requester,
       recipient,
     });
-    console.log(data.data.status);
+    console.log(data);
   } catch (err) {
     console.log(err);
   }

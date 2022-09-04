@@ -24,11 +24,9 @@ interface Props {
 
 const {width} = Dimensions.get('screen');
 const OtherProfileModal = ({modalVisible, setModalVisible, userId}: Props) => {
-  const me = useSelector((state: RootState) => state.me.me);
-  const [blockedUsers, setBlockedUsers] = useState(me.user.blockedUsers);
+  const me = useSelector((state: RootState) => state.me.value);
   const dispatch = useDispatch();
 
-  console.log('\nAHSAN:', userId);
   return (
     <Modal
       animationType="fade"
@@ -49,8 +47,7 @@ const OtherProfileModal = ({modalVisible, setModalVisible, userId}: Props) => {
           <TouchableOpacity
             style={styles.modalPress}
             onPress={() => {
-              blockUser(me.user._id, userId);
-
+              blockUser(me._id, userId);
               setModalVisible(!modalVisible);
             }}>
             <Text style={styles.textStyle}>Block User</Text>
@@ -58,12 +55,9 @@ const OtherProfileModal = ({modalVisible, setModalVisible, userId}: Props) => {
           <TouchableOpacity
             style={styles.modalPress}
             onPress={async () => {
-              await sendFriendRequest(me.user, userId);
+              await sendFriendRequest(me, userId);
 
-              me.user.sentFriendRequests = [
-                ...me.user.sentFriendRequests,
-                userId,
-              ];
+              me.sentFriendRequests = [...me.sentFriendRequests, userId];
 
               setModalVisible(!modalVisible);
             }}>

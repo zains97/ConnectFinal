@@ -32,7 +32,6 @@ const MainFeed = ({navigation}: Props) => {
   //Component start
   const dispatch = useDispatch();
   const me = useSelector((state: RootState) => state.me.value);
-
   const LeftContent = (image: any, userId: string) => (
     <TouchableOpacity
       onPress={() => {
@@ -41,11 +40,10 @@ const MainFeed = ({navigation}: Props) => {
       <Avatar.Image size={40} source={{uri: image}} />
     </TouchableOpacity>
   );
-
   const updateUser = () => {
-    let temp = {id: 1, name: 'TEMP'};
     try {
       getUser(me._id).then(res => {
+        console.log('MAIN FEED RES: ', res);
         storeMe(res);
         dispatch(updateMeState(res));
       });
@@ -64,7 +62,11 @@ const MainFeed = ({navigation}: Props) => {
   const image = true;
 
   React.useEffect(() => {
+    console.log(me);
     updateUser();
+  }, []);
+
+  React.useEffect(() => {
     getAllPosts()
       .then(response => {
         setPosts(response);
@@ -97,9 +99,11 @@ const MainFeed = ({navigation}: Props) => {
                 titleStyle={{fontSize: 16}}
               />
 
-              {image ? (
-                <Card.Cover source={{uri: 'https://picsum.photos/700'}} />
-              ) : null}
+              {item.postImage == undefined || item.postImage == 'no' ? null : (
+                <Card.Cover
+                  source={{uri: `data:image/jpeg;base64,${item.postImage}`}}
+                />
+              )}
               <Card.Content>
                 <Paragraph>{item.postBody}</Paragraph>
               </Card.Content>
@@ -115,7 +119,13 @@ const MainFeed = ({navigation}: Props) => {
                     size={22}
                   />
                 </Button>
-                <Button color="#1d4ed8">Comments</Button>
+                <Button
+                  onPress={() => {
+                    navigation.navigate('ViewPost');
+                  }}
+                  color="#1d4ed8">
+                  Comments
+                </Button>
               </Card.Actions>
             </Card>
           )}

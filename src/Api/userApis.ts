@@ -7,9 +7,12 @@ export const loginUser = async (email: string, password: string) => {
   try {
     const url = `${hostURL}/api/auth/login`;
     const {data} = await axios.post(url, {email, password});
+    if (data.message == 'Incorrect email address.') {
+      return Alert.alert(data.message);
+    }
     return data;
   } catch (error: any) {
-    Alert.alert('Failed to login', error.message);
+    Alert.alert('Failed to login', error);
   }
 };
 
@@ -19,7 +22,7 @@ export const getUser = async (userId: string) => {
     const user = await axios.get(url);
     return user.data;
   } catch (ex) {
-    Alert.alert('Sorry', String(ex));
+    return Alert.alert('Sorry', String(ex));
   }
 };
 
@@ -27,7 +30,7 @@ export const blockUser = async (userId: string, otherId: string) => {
   const url = `${hostURL}/api/user/block/${userId}`;
   axios.put(url, {toBlock: otherId}).then(res => {
     res.data.success
-      ? Alert.alert('Succes', 'USER HAS BEEN BLOCKEd')
+      ? Alert.alert('Success', 'USER HAS BEEN BLOCKED')
       : Alert.alert('Sorry', 'Failed to block user');
   });
 };
@@ -36,7 +39,7 @@ export const unblockUser = async (userId: string, otherId: string) => {
   const url = `${hostURL}/api/user/unblock/${userId}`;
   axios.put(url, {toUnBlock: otherId}).then(res => {
     res.data.success
-      ? Alert.alert('Succes', 'USER HAS BEEN BLOCKEd')
+      ? Alert.alert('Succes', 'USER HAS BEEN UNBLOCKED')
       : Alert.alert('Sorry', 'Failed to block user');
   });
 };

@@ -13,6 +13,7 @@ import {ITags} from '../Interfaces/PostInterfaces';
 import {newPost} from '../Api/postApis';
 import {RootState} from '../Redux/store/store';
 import {useSelector} from 'react-redux';
+import {launchImageLibrary} from 'react-native-image-picker';
 
 interface Props {
   navigation: {jumpTo: any};
@@ -97,15 +98,23 @@ const Publish = ({navigation}: Props) => {
     },
   ];
 
+  const [postImage, setImage] = useState<string>();
   const [postBody, setPostBody] = useState('');
   const [selectedTags, setSelectedTags] = useState<string[]>(['']);
-  console.log('(PUBLISH) : Selected Tags :' + selectedTags);
+
   const publishPost = () => {
     if (postBody.length < 10) {
       Alert.alert('Post must be more than 10 characters long.');
     } else {
       if (selectedTags.length > 0) {
-        newPost(postBody, selectedTags, me._id, me.profilePic, me.firstName);
+        newPost(
+          postBody,
+          selectedTags,
+          me._id,
+          me.profilePic,
+          me.firstName,
+          postImage,
+        );
         setTimeout(() => navigation.jumpTo('Home'), 2000);
       } else {
         Alert.alert('You must select a tag.');
@@ -113,7 +122,7 @@ const Publish = ({navigation}: Props) => {
     }
   };
   return (
-    <View style={{backgroundColor: 'white', flex: 1}}>
+    <ScrollView style={{backgroundColor: 'white', flex: 1}}>
       <View style={{flex: 0.875}}>
         <View style={{marginBottom: 5, justifyContent: 'center'}}>
           <TextInput
@@ -200,24 +209,55 @@ const Publish = ({navigation}: Props) => {
           </ScrollView>
         </View>
         <View style={{justifyContent: 'center', alignItems: 'center'}}>
+          {postImage != undefined ? (
+            <Image
+              style={{
+                width: width * 0.8,
+                height: width * 0.9,
+                resizeMode: 'contain',
+                borderWidth: 1,
+                borderColor: 'red',
+              }}
+              source={{uri: `data:image/jpeg;base64,${postImage}`}}
+            />
+          ) : null}
           <TouchableOpacity
             activeOpacity={0.6}
             onPress={() => {
-              publishPost();
+              if (postImage == undefined) {
+                launchImageLibrary({
+                  includeBase64: true,
+                  mediaType: 'photo',
+                })
+                  .then(res => {
+                    if (!res) {
+                      return Alert.alert(
+                        'Sorry',
+                        'Could not fetch image. Please try again',
+                      );
+                    }
+                    setImage(res.assets[0].base64);
+                  })
+                  .catch(e => Alert.alert(e));
+              } else {
+                setImage(undefined);
+              }
             }}
             style={{
               width: width * 0.5,
               padding: 6,
               borderRadius: 5,
-              backgroundColor: '#3b82f6',
+              backgroundColor: postImage == undefined ? '#3b82f6' : '#ef4444',
               marginHorizontal: 5,
               marginVertical: 5,
               borderWidth: 2,
-              borderColor: '#1e40af',
+              borderColor: postImage == undefined ? '#1e40af' : '#b91c1c',
               justifyContent: 'center',
               alignItems: 'center',
             }}>
-            <Text style={{color: 'white', fontSize: 16}}>Upload Image</Text>
+            <Text style={{color: 'white', fontSize: 16}}>
+              {postImage == undefined ? 'Upload Image' : 'Remove Image'}
+            </Text>
           </TouchableOpacity>
           <TouchableOpacity
             activeOpacity={0.6}
@@ -240,7 +280,7 @@ const Publish = ({navigation}: Props) => {
           </TouchableOpacity>
         </View>
       </View>
-    </View>
+    </ScrollView>
   );
 };
 

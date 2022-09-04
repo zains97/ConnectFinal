@@ -8,6 +8,8 @@ type Props = {
   profilePic: String;
   recipientId: String;
   requestId: String;
+  setfriendRequests: any;
+  friendRequests: any;
 };
 
 const FriendRequest = ({
@@ -16,6 +18,8 @@ const FriendRequest = ({
   recipientId,
   requesterId,
   requestId,
+  setfriendRequests,
+  friendRequests,
 }: Props) => {
   return (
     <View style={styles.container}>
@@ -32,9 +36,18 @@ const FriendRequest = ({
         <TouchableOpacity
           onPress={() => {
             acceptFriendRequest(requesterId, recipientId, requestId);
+            setfriendRequests(
+              friendRequests.filter(req => req._id != requestId),
+            );
           }}
           style={styles.buttonBlue}>
-          <Text style={styles.buttonText}>Accept</Text>
+          <Text
+            onPress={() => {
+              console.log('DECLINED');
+            }}
+            style={styles.buttonText}>
+            Accept
+          </Text>
         </TouchableOpacity>
         <TouchableOpacity style={styles.buttonRed}>
           <Text style={styles.buttonText}>Decline</Text>

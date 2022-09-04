@@ -3,7 +3,6 @@ import React, {useEffect, useState} from 'react';
 import {Button, TextInput, TouchableRipple} from 'react-native-paper';
 import logo from '../Assets/modifiedConnectLogo.png';
 import {getUser, loginUser} from '../Api/userApis';
-import {AxiosResponse} from 'axios';
 import {storeMe} from '../Utilities/StoreMe';
 import {updateMeState} from '../Redux/slices/MeSlice';
 import {useDispatch} from 'react-redux';
@@ -77,8 +76,10 @@ const Login = ({navigation}: Props) => {
                 console.log('LOGIN RES: ', res.user);
                 storeMe(res.user);
                 dispatch(updateMeState(res.user));
-                navigation.navigate('MainApp');
+              })
+              .then(() => {
                 setBtnLoading(false);
+                navigation.navigate('MainApp');
               })
               .catch(e => {
                 Alert.alert(e);

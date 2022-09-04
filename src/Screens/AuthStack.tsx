@@ -16,6 +16,7 @@ import Profile from './Profile';
 import {Header} from '../Components';
 import SignUp2 from './SignUp2';
 import SelectPersonToChat from './SelectPersonToChat';
+import ViewPostScreen from './ViewPostScreen';
 
 const Stack = createNativeStackNavigator();
 type Props = {};
@@ -61,6 +62,7 @@ const AuthStack = (props: Props) => {
         }}
       />
       <Stack.Screen name="Chatroom" component={Chatroom} />
+      <Stack.Screen name="ViewPost" component={ViewPostScreen} />
     </Stack.Navigator>
   );
 };
