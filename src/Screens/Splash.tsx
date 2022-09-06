@@ -1,4 +1,4 @@
-import {Image, StyleSheet, Text, View} from 'react-native';
+import {Alert, Image, StyleSheet, Text, View} from 'react-native';
 import React, {useEffect} from 'react';
 import logo from '../Assets/ConnectLogo.png';
 import {getMe, storeMe} from '../Utilities/StoreMe';
@@ -17,10 +17,15 @@ const Splash = ({navigation}: Props) => {
     getMe().then(res => {
       // console.log('SPLASH RES: ', res);
       if (res) {
-        getUser(res._id).then(() => {
-          dispatch(updateMeState(res));
-          storeMe(res);
-        });
+        getUser(res._id)
+          .then(res2 => {
+            console.log('SPLASH: ', res2.data);
+            dispatch(updateMeState(res2.data));
+            storeMe(res2.data);
+          })
+          .catch(() => {
+            Alert.alert('Something went wrong, please restart the app.');
+          });
       }
       setTimeout(() => {
         if (res) {

@@ -15,6 +15,7 @@ import {
   Button,
   Card,
   Paragraph,
+  Text,
 } from 'react-native-paper';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import {useDispatch, useSelector} from 'react-redux';
@@ -22,6 +23,7 @@ import {RootState} from '../Redux/store/store';
 import {getUser} from '../Api/userApis';
 import {getMe, storeMe} from '../Utilities/StoreMe';
 import {updateMeState} from '../Redux/slices/MeSlice';
+import {checkBlocked} from '../Utilities/checkBlocked';
 
 type Props = {
   navigation: any;
@@ -92,45 +94,50 @@ const MainFeed = ({navigation}: Props) => {
         <FlatList
           style={{margin: 20}}
           data={posts}
-          renderItem={({item}) => (
-            <Card style={{marginVertical: 5}}>
-              <Card.Title
-                title={item.creatorName}
-                subtitle={item.createDate.toString()}
-                left={() => LeftContent(item.creatorImage, item.creator)}
-                titleStyle={{fontSize: 16}}
-              />
-
-              {item.postImage == undefined || item.postImage == 'no' ? null : (
-                <Card.Cover
-                  source={{uri: `data:image/jpeg;base64,${item.postImage}`}}
+          renderItem={({item}) =>
+            !checkBlocked(item.creator, me.blockedUsers) ? (
+              <Card style={{marginVertical: 5}}>
+                <Card.Title
+                  title={item.creatorName}
+                  subtitle={item.createDate.toString()}
+                  left={() => LeftContent(item.creatorImage, item.creator)}
+                  titleStyle={{fontSize: 16}}
                 />
-              )}
-              <Card.Content>
-                <Paragraph>{item.postBody}</Paragraph>
-              </Card.Content>
 
-              <Card.Actions>
-                <Button
-                  onPress={() => {
-                    console.log('like');
-                  }}>
-                  <MaterialCommunityIcons
-                    name="thumb-up-outline"
-                    color="#1d4ed8"
-                    size={22}
+                {item.postImage == undefined ||
+                item.postImage == 'no' ? null : (
+                  <Card.Cover
+                    source={{uri: `data:image/jpeg;base64,${item.postImage}`}}
                   />
-                </Button>
-                <Button
-                  onPress={() => {
-                    navigation.navigate('ViewPost');
-                  }}
-                  color="#1d4ed8">
-                  Comments
-                </Button>
-              </Card.Actions>
-            </Card>
-          )}
+                )}
+                <Card.Content>
+                  <Paragraph>{item.postBody}</Paragraph>
+                </Card.Content>
+
+                <Card.Actions>
+                  <Button
+                    onPress={() => {
+                      console.log('like');
+                    }}>
+                    <MaterialCommunityIcons
+                      name="thumb-up-outline"
+                      color="#1d4ed8"
+                      size={22}
+                    />
+                  </Button>
+                  <Button
+                    onPress={() => {
+                      navigation.navigate('ViewPost');
+                    }}
+                    color="#1d4ed8">
+                    Comments
+                  </Button>
+                </Card.Actions>
+              </Card>
+            ) : (
+              <></>
+            )
+          }
         />
       )}
     </View>

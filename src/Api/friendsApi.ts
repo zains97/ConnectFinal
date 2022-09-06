@@ -2,7 +2,7 @@ import axios from 'axios';
 import {Alert} from 'react-native';
 import {IUser} from '../Interfaces/UserInterface';
 
-const hostURL = `http://192.168.1.105:5000/api/friends`;
+const hostURL = `http://192.168.0.103:5000/api/friends`;
 
 export const getFriendRequests = async (recipientId: string) => {
   try {

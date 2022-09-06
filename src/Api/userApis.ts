@@ -1,7 +1,7 @@
 import axios from 'axios';
 import {Alert} from 'react-native';
 
-const hostURL = 'http://192.168.1.105:5000';
+const hostURL = 'http://192.168.0.103:5000';
 
 export const loginUser = async (email: string, password: string) => {
   try {
@@ -29,19 +29,24 @@ export const getUser = async (userId: string) => {
 
 export const blockUser = async (userId: string, otherId: string) => {
   const url = `${hostURL}/api/user/block/${userId}`;
-  axios.put(url, {toBlock: otherId}).then(res => {
-    res.data.success
-      ? Alert.alert('Success', 'USER HAS BEEN BLOCKED')
-      : Alert.alert('Sorry', 'Failed to block user');
-  });
+  axios
+    .put(url, {toBlock: otherId})
+    .then(res => {
+      res.data.success
+        ? Alert.alert('Success', 'USER HAS BEEN BLOCKED')
+        : Alert.alert('Sorry', 'Failed to block user');
+    })
+    .catch(e => {
+      return Alert.alert('Something went wrong.');
+    });
 };
 
 export const unblockUser = async (userId: string, otherId: string) => {
   const url = `${hostURL}/api/user/unblock/${userId}`;
   axios.put(url, {toUnBlock: otherId}).then(res => {
     res.data.success
-      ? Alert.alert('Succes', 'USER HAS BEEN UNBLOCKED')
-      : Alert.alert('Sorry', 'Failed to block user');
+      ? Alert.alert('Success', 'USER HAS BEEN UNBLOCKED')
+      : Alert.alert('Sorry', 'Failed to unblock user');
   });
 };
 

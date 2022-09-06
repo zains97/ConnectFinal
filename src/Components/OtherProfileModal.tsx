@@ -10,20 +10,24 @@ import React, {useState} from 'react';
 import {sendFriendRequest} from '../Api/friendsApi';
 import {useSelector} from 'react-redux';
 import {RootState} from '../Redux/store/store';
-import {storeMe} from '../Utilities/StoreMe';
 import {useDispatch} from 'react-redux';
 import {updateMeState} from '../Redux/slices/MeSlice';
-import {IUser} from '../Interfaces/UserInterface';
-import {blockUser} from '../Api/userApis';
+import {blockUser, getUser, unblockUser} from '../Api/userApis';
 
 interface Props {
   modalVisible: boolean;
   setModalVisible: any;
   userId: any;
+  isBlocked: boolean;
 }
 
 const {width} = Dimensions.get('screen');
-const OtherProfileModal = ({modalVisible, setModalVisible, userId}: Props) => {
+const OtherProfileModal = ({
+  modalVisible,
+  setModalVisible,
+  userId,
+  isBlocked,
+}: Props) => {
   const me = useSelector((state: RootState) => state.me.value);
   const dispatch = useDispatch();
 
@@ -37,21 +41,43 @@ const OtherProfileModal = ({modalVisible, setModalVisible, userId}: Props) => {
       }}>
       <View style={styles.centeredView}>
         <View style={styles.modalView}>
-          <TouchableOpacity
-            style={styles.modalPress}
-            onPress={() => {
-              setModalVisible(!modalVisible);
-            }}>
-            <Text style={styles.textStyle}>Unblock User</Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            style={styles.modalPress}
-            onPress={() => {
-              blockUser(me._id, userId);
-              setModalVisible(!modalVisible);
-            }}>
-            <Text style={styles.textStyle}>Block User</Text>
-          </TouchableOpacity>
+          {isBlocked ? (
+            <TouchableOpacity
+              style={styles.modalPress}
+              onPress={() => {
+                console.log('unBlock');
+                //Check
+                unblockUser(me._id, userId)
+                  .then(async () => {
+                    console.log('ME BEFORE: ', me);
+                    dispatch(updateMeState((await getUser(me._id)).data));
+                    console.log('ME AFTER', me);
+                  })
+                  .catch(() => {});
+
+                setModalVisible(!modalVisible);
+              }}>
+              <Text style={styles.textStyle}>Unblock User</Text>
+            </TouchableOpacity>
+          ) : (
+            <TouchableOpacity
+              style={styles.modalPress}
+              onPress={() => {
+                //Check
+                blockUser(me._id, userId)
+                  .then(async () => {
+                    console.log('ME BEFORE: ', me);
+                    dispatch(updateMeState((await getUser(me._id)).data));
+                    console.log('ME AFTER', me);
+                  })
+                  .catch(() => {});
+
+                setModalVisible(!modalVisible);
+              }}>
+              <Text style={styles.textStyle}>Block User</Text>
+            </TouchableOpacity>
+          )}
+
           <TouchableOpacity
             style={styles.modalPress}
             onPress={async () => {

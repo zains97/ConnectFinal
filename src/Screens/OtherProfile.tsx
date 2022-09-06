@@ -6,11 +6,15 @@ import {
   ImageBackground,
   TouchableOpacity,
   Dimensions,
+  Alert,
 } from 'react-native';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
-import {getUser} from '../Api/userApis';
+import {useSelector} from 'react-redux';
+import {blockUser, getUser} from '../Api/userApis';
 import OtherProfileModal from '../Components/OtherProfileModal';
 import {IUser} from '../Interfaces/UserInterface';
+import {RootState} from '../Redux/store/store';
+import {checkBlocked} from '../Utilities/checkBlocked';
 
 interface Props {
   route: {params: {userId: string}};
@@ -19,13 +23,20 @@ interface Props {
 }
 const OtherProfile = ({route, navigation, userId}: Props) => {
   const [user, setUser] = useState<IUser>();
+  const [isBlocked, setIsBlocked] = useState(false);
+  const me = useSelector((state: RootState) => state.me.value);
+
   useEffect(() => {
     getUser(route.params.userId).then(res => {
-      setUser(res);
+      setUser(res.data);
+      console.log('BLOCKED USERS: ', me.blockedUsers);
+      setIsBlocked(checkBlocked(res.data._id, me.blockedUsers));
+      console.log('IS BLOCKED: ', isBlocked);
     });
   }, []);
   const [modalVisible, setModalVisible] = useState(false);
   const {width} = Dimensions.get('screen');
+
   return (
     <>
       <ImageBackground
@@ -58,6 +69,7 @@ const OtherProfile = ({route, navigation, userId}: Props) => {
             modalVisible={modalVisible}
             setModalVisible={setModalVisible}
             userId={user?._id}
+            isBlocked={isBlocked}
           />
           <View
             style={{
