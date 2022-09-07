@@ -18,3 +18,4 @@ export {default as VoiceCall} from './VoiceCall';
 export {default as VideoCall} from './VideoCall';
 export {default as TextChat} from './TextChat';
 export {default as Chatroom} from './Chatroom';
+export {default as TrendingPosts} from './TrendingPosts';
