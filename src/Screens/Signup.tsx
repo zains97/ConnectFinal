@@ -1,4 +1,4 @@
-import {StyleSheet, Text, View, Dimensions, Image} from 'react-native';
+import {StyleSheet, Text, View, Dimensions, Image, Alert} from 'react-native';
 import React, {useState} from 'react';
 import {Button, TextInput, TouchableRipple} from 'react-native-paper';
 import logo from '../Assets/modifiedConnectLogo.png';
@@ -18,9 +18,13 @@ const SignUp = ({navigation}: Props) => {
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
 
-  const [date, setDate] = useState<Date>(new Date('Mar 25 2015'));
+  const [date, setDate] = useState<Date>(new Date('Jan 01 2004'));
   const [open, setOpen] = useState(false);
-
+  console.log('\nEmail: ', email);
+  console.log('Password: ', password);
+  console.log('Confirm Password: ', confirmPassword);
+  console.log('NAME: ', firstName, lastName);
+  console.log('DOB', date);
   const navigate = (
     email: String,
     password: string,
@@ -158,7 +162,20 @@ const SignUp = ({navigation}: Props) => {
           mode="contained"
           style={styles.signUpButton}
           onPress={() => {
-            navigation.navigate('SignUp2');
+            if (password == confirmPassword) {
+              navigation.navigate('SignUp2', {
+                info: {
+                  firstName,
+                  lastName,
+                  password,
+                  confirmPassword,
+                  email,
+                  date,
+                },
+              });
+            } else {
+              Alert.alert("Passwords don't match");
+            }
           }}>
           Next
         </Button>

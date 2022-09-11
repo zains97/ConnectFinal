@@ -6,13 +6,16 @@ import {
   Image,
   ScrollView,
   TouchableOpacity,
+  Alert,
 } from 'react-native';
 import React, {useState} from 'react';
 import {Button} from 'react-native-paper';
 import logo from '../Assets/modifiedConnectLogo.png';
-import {ITags} from '../Interfaces/PostInterfaces';
 import Icon from 'react-native-vector-icons/Fontisto';
 import {signUpUser} from '../Api/userApis';
+import {tags} from '../Utilities/tags';
+import {launchImageLibrary} from 'react-native-image-picker';
+import {useRoute} from '@react-navigation/native';
 
 const {width} = Dimensions.get('screen');
 
@@ -29,94 +32,11 @@ const genders = [
 
 const SignUp2 = ({navigation}: any) => {
   const [gender, setGender] = useState<string>('Male');
-
-  const tags: ITags[] = [
-    {
-      id: 0,
-      name: 'General',
-    },
-    {
-      id: 1,
-      name: 'Football',
-    },
-    {
-      id: 2,
-      name: 'Sports',
-    },
-    {
-      id: 3,
-      name: 'Programming',
-    },
-    {
-      id: 4,
-      name: 'Cricket',
-    },
-    {
-      id: 5,
-      name: 'Cooking',
-    },
-    {
-      id: 6,
-      name: 'Marital Arts',
-    },
-    {
-      id: 7,
-      name: 'Tech',
-    },
-    {
-      id: 8,
-      name: 'Science',
-    },
-    {
-      id: 9,
-      name: 'Religion',
-    },
-    {
-      id: 10,
-      name: 'Islam',
-    },
-    {
-      id: 11,
-      name: 'Health',
-    },
-    {
-      id: 12,
-      name: 'Fitness',
-    },
-    {
-      id: 13,
-      name: 'Weapons',
-    },
-    {
-      id: 14,
-      name: 'Politics',
-    },
-    {
-      id: 15,
-      name: 'Econimics',
-    },
-    {
-      id: 16,
-      name: 'Gaming',
-    },
-    {
-      id: 17,
-      name: 'Philosophy',
-    },
-  ];
-
   const [tag, setTag] = useState<string[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(false);
-
-  function removeItemOnce(arr: string[], value: string) {
-    var index = arr.indexOf(value);
-    console.log('INDEX: ', index);
-    if (index > -1) {
-      console.log('Splice: ', arr.splice(index, 0));
-      setTag(arr.splice(index, 1));
-    }
-  }
-  console.log(tag);
+  const [image, setImage] = useState('');
+  let route = useRoute();
+  let {info} = route.params;
   return (
     <View style={styles.signUpContainer}>
       <View style={styles.logoContainer}>
@@ -131,30 +51,73 @@ const SignUp2 = ({navigation}: any) => {
         <Text style={styles.signUpFormHeading}>
           Upload Image and Select Interests
         </Text>
-        <View
-          style={{
-            flexDirection: 'row',
-            justifyContent: 'center',
-            alignItems: 'center',
-          }}>
-          <Text
-            style={{
-              marginHorizontal: 10,
-              fontSize: 16,
-              fontWeight: 'bold',
-              color: 'black',
-            }}>
-            Select Image:
-          </Text>
-          <Button
-            mode="contained"
-            style={styles.signUpButton}
-            onPress={() => {
-              navigation.navigate('Upload Image');
-            }}>
-            Pick Image
-          </Button>
-        </View>
+        {image == '' ? (
+          <>
+            <View
+              style={{
+                flexDirection: 'row',
+                justifyContent: 'center',
+                alignItems: 'center',
+              }}>
+              <Text
+                style={{
+                  marginHorizontal: 10,
+                  fontSize: 16,
+                  fontWeight: 'bold',
+                  color: 'black',
+                }}>
+                Select Image:
+              </Text>
+              <Button
+                mode="contained"
+                style={styles.signUpButton}
+                onPress={() => {
+                  if (image == '') {
+                    launchImageLibrary({
+                      includeBase64: true,
+                      mediaType: 'photo',
+                    })
+                      .then(res => {
+                        if (!res) {
+                          return Alert.alert(
+                            'Sorry',
+                            'Could not fetch image. Please try again',
+                          );
+                        }
+                        setImage(res.assets[0].base64);
+                      })
+                      .catch(e => Alert.alert(e));
+                  } else {
+                    setImage('');
+                  }
+                }}>
+                Pick Image
+              </Button>
+            </View>
+          </>
+        ) : (
+          <>
+            <Image
+              style={{
+                borderRadius: 10,
+                width: width * 0.5,
+                height: width * 0.5,
+                resizeMode: 'contain',
+                borderWidth: 1,
+              }}
+              source={{uri: `data:image/jpeg;base64,${image}`}}
+            />
+            <Button
+              onPress={() => {
+                setImage('');
+              }}
+              color="white"
+              style={{backgroundColor: '#f43f5e', marginTop: 5}}>
+              Remove image
+            </Button>
+          </>
+        )}
+
         <View style={{height: '45%'}}>
           <Text
             style={{
@@ -168,7 +131,6 @@ const SignUp2 = ({navigation}: any) => {
           <ScrollView horizontal={true}>
             <View
               style={{
-                marginVertical: 10,
                 marginHorizontal: 10,
                 flexDirection: 'row',
               }}>
@@ -248,16 +210,21 @@ const SignUp2 = ({navigation}: any) => {
             disabled={isLoading}
             mode="contained"
             style={styles.signUpButton}
-            onPress={() => {
+            onPress={async () => {
               setIsLoading(true);
-              signUpUser(
-                'Aisha',
-                'Ali',
-                'aisha@hotmail.com',
-                'cdbgbcd',
+
+              await signUpUser(
+                info.firstName,
+                info.lastName,
+                info.email,
+                info.password,
                 gender,
                 tag,
-              );
+                image,
+              ),
+                setTimeout(() => {
+                  navigation.navigate('Login');
+                }, 2000);
               setIsLoading(false);
             }}>
             Sign Up

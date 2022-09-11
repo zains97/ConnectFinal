@@ -107,6 +107,8 @@ const MainFeed = ({navigation}: Props) => {
                 {item.postImage == undefined ||
                 item.postImage == 'no' ? null : (
                   <Card.Cover
+                    resizeMethod="resize"
+                    resizeMode="cover"
                     source={{uri: `data:image/jpeg;base64,${item.postImage}`}}
                   />
                 )}
@@ -131,6 +133,17 @@ const MainFeed = ({navigation}: Props) => {
                     }}
                     color="#1d4ed8">
                     Comments
+                  </Button>
+                  <Button
+                    onPress={() => {
+                      console.log('Report');
+                    }}
+                    color="white"
+                    style={{
+                      backgroundColor: 'red',
+                      marginHorizontal: '5%',
+                    }}>
+                    Report post
                   </Button>
                 </Card.Actions>
               </Card>

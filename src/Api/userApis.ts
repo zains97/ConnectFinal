@@ -73,7 +73,8 @@ export const signUpUser = (
   password: string,
   gender: string,
   interests: string[],
-) => {
+  profilePic: string,
+): string => {
   const url = `${hostURL}/api/auth/register`;
 
   let body = {
@@ -83,16 +84,17 @@ export const signUpUser = (
     password,
     gender,
     interests,
+    profilePic: profilePic == '' ? undefined : profilePic,
   };
-  console.log('Running');
 
   axios
     .post(url, body)
-    .then(res => {
-      console.log(res.data);
-      console.log('TEST');
+    .then(() => {
+      Alert.alert('Congrats, Successfully created new user!');
     })
     .catch(e => {
-      return Alert.alert('Falied', e);
+      Alert.alert('Sorry', e.message);
     });
+
+  console.log('BODY: ', body);
 };

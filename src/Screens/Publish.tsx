@@ -14,7 +14,7 @@ import {newPost} from '../Api/postApis';
 import {RootState} from '../Redux/store/store';
 import {useSelector} from 'react-redux';
 import {launchImageLibrary} from 'react-native-image-picker';
-
+import {tags} from '../Utilities/tags';
 interface Props {
   navigation: {jumpTo: any};
 }
@@ -23,80 +23,6 @@ const Publish = ({navigation}: Props) => {
   const me = useSelector((state: RootState) => state.me.value);
 
   const {width} = Dimensions.get('screen');
-  const tags: ITags[] = [
-    {
-      id: 0,
-      name: 'General',
-    },
-    {
-      id: 1,
-      name: 'Football',
-    },
-    {
-      id: 2,
-      name: 'Sports',
-    },
-    {
-      id: 3,
-      name: 'Programming',
-    },
-    {
-      id: 4,
-      name: 'Cricket',
-    },
-    {
-      id: 5,
-      name: 'Cooking',
-    },
-    {
-      id: 6,
-      name: 'Marital Arts',
-    },
-    {
-      id: 7,
-      name: 'Tech',
-    },
-    {
-      id: 8,
-      name: 'Science',
-    },
-    {
-      id: 9,
-      name: 'Religion',
-    },
-    {
-      id: 10,
-      name: 'Islam',
-    },
-    {
-      id: 11,
-      name: 'Health',
-    },
-    {
-      id: 12,
-      name: 'Fitness',
-    },
-    {
-      id: 13,
-      name: 'Weapons',
-    },
-    {
-      id: 14,
-      name: 'Politics',
-    },
-    {
-      id: 15,
-      name: 'Econimics',
-    },
-    {
-      id: 16,
-      name: 'Gaming',
-    },
-    {
-      id: 17,
-      name: 'Philosophy',
-    },
-  ];
 
   const [postImage, setImage] = useState<string>();
   const [postBody, setPostBody] = useState('');
