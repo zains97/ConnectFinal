@@ -1,5 +1,6 @@
 import axios from 'axios';
 import {Alert} from 'react-native';
+import {IUser} from '../Interfaces/UserInterface';
 
 const hostURL = 'http://192.168.0.103:5000';
 
@@ -62,8 +63,18 @@ export const getAllConversations = async () => {
   return data.data;
 };
 
-export const getAllFriends = (userId: string) => {
-  const url = `${hostURL}/api`;
+export const getAllFriends = (
+  friendsId: string[],
+  setFriends: React.Dispatch<React.SetStateAction<IUser[] | undefined>>,
+) => {
+  const url = `${hostURL}/api/user/get-friends`;
+  axios.put(url, {friendsId}).then(res => {
+    if (res.data.success == true) {
+      setFriends(res.data.friends);
+    } else {
+      Alert.alert('Failed to get friends, try again');
+    }
+  });
 };
 
 export const signUpUser = (
@@ -74,7 +85,7 @@ export const signUpUser = (
   gender: string,
   interests: string[],
   profilePic: string,
-): string => {
+) => {
   const url = `${hostURL}/api/auth/register`;
 
   let body = {
@@ -97,4 +108,9 @@ export const signUpUser = (
     });
 
   console.log('BODY: ', body);
+};
+
+export const updateLocation = (userId: string, location: Object) => {
+  let url = `${hostURL}/api/user/update-location`;
+  axios.patch(url, {userId, location}).catch(() => {});
 };

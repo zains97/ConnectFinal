@@ -41,13 +41,7 @@ const FriendRequest = ({
             );
           }}
           style={styles.buttonBlue}>
-          <Text
-            onPress={() => {
-              console.log('DECLINED');
-            }}
-            style={styles.buttonText}>
-            Accept
-          </Text>
+          <Text style={styles.buttonText}>Accept</Text>
         </TouchableOpacity>
         <TouchableOpacity style={styles.buttonRed}>
           <Text style={styles.buttonText}>Decline</Text>

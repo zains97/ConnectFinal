@@ -12,7 +12,7 @@ export const getAllPosts = async () => {
 
 export const newPost = (
   postBody: string,
-  tags: string[],
+  tags: string,
   creator: string,
   creatorImage: string,
   creatorName: string,
@@ -43,4 +43,26 @@ export const getFriendsPosts = async (friendsId: string[]) => {
   const url = `${hostURL}/api/posts/friends-post`;
   let res = await axios.post(url, {friendsId});
   return res.data;
+};
+
+export const reportPost = async (reporterId: string, postId: string) => {
+  axios
+    .post(`${hostURL}/api/posts/report`, {reporterId, postId})
+    .then(() => Alert.alert('Success', 'Post reported'))
+    .catch(e => Alert.alert('Sorry', e.message));
+};
+
+export const likePost = (likerId: string, postId: string, item: IPost) => {
+  axios
+    .patch(`${hostURL}/api/posts/like-post/${postId}`, {likerId})
+    .then(res => {
+      console.log(res.data);
+      if (res.data.success == true) {
+        item.likers = [...item.likers, likerId];
+        item.likeCount = item.likeCount + 1;
+      }
+    })
+    .catch(e => {
+      console.log(e);
+    });
 };

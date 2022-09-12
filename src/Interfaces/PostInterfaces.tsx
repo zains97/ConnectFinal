@@ -9,6 +9,8 @@ export interface IPost {
   __v: number;
   comments: [];
   postImage: string;
+  likeCount: number;
+  likers: string[];
 }
 
 export interface ITags {

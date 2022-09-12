@@ -26,13 +26,13 @@ const Publish = ({navigation}: Props) => {
 
   const [postImage, setImage] = useState<string>();
   const [postBody, setPostBody] = useState('');
-  const [selectedTags, setSelectedTags] = useState<string[]>(['']);
-
+  const [selectedTags, setSelectedTags] = useState('');
+  console.log('SELECTED TAG: ', selectedTags);
   const publishPost = () => {
     if (postBody.length < 10) {
       Alert.alert('Post must be more than 10 characters long.');
     } else {
-      if (selectedTags.length > 0) {
+      if (selectedTags != '') {
         newPost(
           postBody,
           selectedTags,
@@ -99,14 +99,9 @@ const Publish = ({navigation}: Props) => {
                   key={index}
                   activeOpacity={0.6}
                   onPress={() => {
-                    if (!selectedTags.includes(data.name)) {
-                      setSelectedTags([...selectedTags, data.name]);
-                    } else {
-                      setSelectedTags(
-                        selectedTags.filter(tag => tag != data.name),
-                      );
-                    }
+                    setSelectedTags(data.name);
                   }}>
+                  {console.log(data.name)}
                   <View
                     style={{
                       padding: 6,
@@ -114,17 +109,15 @@ const Publish = ({navigation}: Props) => {
                       backgroundColor: '#3b82f6',
                       marginHorizontal: 5,
                       borderWidth: 3,
-                      borderColor: selectedTags.includes(data.name)
-                        ? '#1d4ed8'
-                        : '#3b82f6',
+                      borderColor:
+                        selectedTags == data.name ? '#1d4ed8' : '#3b82f6',
                     }}>
                     <Text
                       style={{
                         color: 'white',
-                        fontSize: selectedTags.includes(data.name) ? 18 : 16,
-                        fontWeight: selectedTags.includes(data.name)
-                          ? 'bold'
-                          : 'normal',
+                        fontSize: selectedTags == data.name ? 18 : 16,
+                        fontWeight:
+                          selectedTags == data.name ? 'bold' : 'normal',
                       }}>
                       {data.name}
                     </Text>

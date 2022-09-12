@@ -15,7 +15,7 @@ import {RootState} from '../Redux/store/store';
 import {io} from 'socket.io-client';
 import {sendMessage} from '../Api/userApis';
 
-const SERVER = 'http://192.168.0.103:5000';
+const SERVER = 'http://192.168.1.102:5000';
 
 type Props = {};
 

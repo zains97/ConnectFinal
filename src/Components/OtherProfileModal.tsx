@@ -7,7 +7,7 @@ import {
   TouchableOpacity,
 } from 'react-native';
 import React, {useState} from 'react';
-import {sendFriendRequest} from '../Api/friendsApi';
+import {cancelFriendRequest, sendFriendRequest} from '../Api/friendsApi';
 import {useSelector} from 'react-redux';
 import {RootState} from '../Redux/store/store';
 import {useDispatch} from 'react-redux';
@@ -77,18 +77,26 @@ const OtherProfileModal = ({
               <Text style={styles.textStyle}>Block User</Text>
             </TouchableOpacity>
           )}
-
-          <TouchableOpacity
-            style={styles.modalPress}
-            onPress={async () => {
-              await sendFriendRequest(me, userId);
-
-              me.sentFriendRequests = [...me.sentFriendRequests, userId];
-
-              setModalVisible(!modalVisible);
-            }}>
-            <Text style={styles.textStyle}>Send Friend Request</Text>
-          </TouchableOpacity>
+          {me.sentFriendRequests.includes(userId) ? (
+            //Cancel
+            <TouchableOpacity
+              style={styles.modalPress}
+              onPress={async () => {
+                cancelFriendRequest(me._id, userId);
+              }}>
+              <Text style={styles.textStyle}>Cancel Friend Request</Text>
+            </TouchableOpacity>
+          ) : (
+            //Send
+            <TouchableOpacity
+              style={styles.modalPress}
+              onPress={async () => {
+                await sendFriendRequest(me, userId);
+                me.sentFriendRequests = [...me.sentFriendRequests, userId];
+              }}>
+              <Text style={styles.textStyle}>Send Friend Request</Text>
+            </TouchableOpacity>
+          )}
           <TouchableOpacity
             style={styles.modalPressWarning}
             onPress={() => setModalVisible(!modalVisible)}>

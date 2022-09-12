@@ -11,6 +11,9 @@ import {
 } from 'react-native';
 import MapView, {Callout, Marker} from 'react-native-maps';
 import {useSelector} from 'react-redux';
+import {getAllPosts} from '../Api/postApis';
+import {getAllFriends, updateLocation} from '../Api/userApis';
+import {IUser} from '../Interfaces/UserInterface';
 import {RootState} from '../Redux/store/store';
 import {getLocation} from '../Utilities/Permissions';
 
@@ -26,12 +29,17 @@ export default function App({navigation}: any) {
     latitude: 24.8607,
     longitude: 67.0961,
   });
+  const [friends, setFriends] = useState<IUser[]>();
+
   const me = useSelector((state: RootState) => state.me.value);
   useEffect(() => {
     getLocation(setMyLocation);
-    console.log('Coordinates: ', myLocation);
+    updateLocation(me._id, myLocation);
   }, []);
 
+  useEffect(() => {
+    getAllFriends(me.friendsId, setFriends);
+  }, []);
   return (
     <View style={styles.container}>
       <MapView style={styles.map} initialRegion={currentLocation}>
@@ -50,12 +58,44 @@ export default function App({navigation}: any) {
             }}>
             <Image
               source={{
-                uri: 'https://www.dmarge.com/wp-content/uploads/2021/01/dwayne-the-rock-.jpg',
+                uri: me.profilePic,
               }}
               style={{height: 38, width: 38, borderRadius: 50}}
             />
           </View>
         </Marker>
+
+        {friends?.map((friend, index) => {
+          if (friend.currentLocation != undefined) {
+            let location = {
+              latitude: Number(friend.currentLocation.latitude),
+              longitude: Number(friend.currentLocation.longitude),
+            };
+            return (
+              <Marker key={index} coordinate={location}>
+                <View
+                  style={{
+                    borderRadius: 50,
+                    height: 40,
+                    width: 40,
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    borderColor: 'black',
+                    borderWidth: 1,
+                  }}>
+                  <Image
+                    source={{
+                      uri: friend.profilePic,
+                    }}
+                    style={{height: 38, width: 38, borderRadius: 50}}
+                  />
+                </View>
+              </Marker>
+            );
+          } else {
+            return <></>;
+          }
+        })}
       </MapView>
       <View style={styles.topHeader}>
         <TouchableOpacity onPress={() => navigation.navigate('Profile')}>
@@ -83,7 +123,7 @@ export default function App({navigation}: any) {
               }}>
               <Image
                 source={{
-                  uri: 'https://www.dmarge.com/wp-content/uploads/2021/01/dwayne-the-rock-.jpg',
+                  uri: me.profilePic,
                 }}
                 style={{
                   height: 40,
@@ -93,8 +133,9 @@ export default function App({navigation}: any) {
                 }}
               />
               <View>
-                <Text style={styles.modalText}>Zain Saleem</Text>
-                <Text style={styles.kmText}>120km away</Text>
+                <Text style={styles.modalText}>
+                  {me.firstName + ' ' + me.lastName}
+                </Text>
               </View>
             </View>
           </View>

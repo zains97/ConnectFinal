@@ -7,7 +7,7 @@ import {
   View,
 } from 'react-native';
 import React from 'react';
-import {getAllPosts} from '../Api/postApis';
+import {getAllPosts, likePost, reportPost} from '../Api/postApis';
 import {IPost} from '../Interfaces/PostInterfaces';
 import {
   ActivityIndicator,
@@ -24,6 +24,7 @@ import {getUser} from '../Api/userApis';
 import {getMe, storeMe} from '../Utilities/StoreMe';
 import {updateMeState} from '../Redux/slices/MeSlice';
 import {checkBlocked} from '../Utilities/checkBlocked';
+import {useLinkBuilder} from '@react-navigation/native';
 
 type Props = {
   navigation: any;
@@ -119,7 +120,7 @@ const MainFeed = ({navigation}: Props) => {
                 <Card.Actions>
                   <Button
                     onPress={() => {
-                      console.log('like');
+                      likePost(me._id, item._id, item);
                     }}>
                     <MaterialCommunityIcons
                       name="thumb-up-outline"
@@ -127,6 +128,9 @@ const MainFeed = ({navigation}: Props) => {
                       size={22}
                     />
                   </Button>
+                  <Text style={{color: 'blue'}}>
+                    {item.likeCount == undefined ? 0 : item.likeCount}
+                  </Text>
                   <Button
                     onPress={() => {
                       navigation.navigate('ViewPost');
@@ -136,6 +140,7 @@ const MainFeed = ({navigation}: Props) => {
                   </Button>
                   <Button
                     onPress={() => {
+                      reportPost(me._id, item._id);
                       console.log('Report');
                     }}
                     color="white"
@@ -143,7 +148,7 @@ const MainFeed = ({navigation}: Props) => {
                       backgroundColor: 'red',
                       marginHorizontal: '5%',
                     }}>
-                    Report post
+                    Report
                   </Button>
                 </Card.Actions>
               </Card>
