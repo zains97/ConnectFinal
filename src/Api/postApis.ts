@@ -66,3 +66,23 @@ export const likePost = (likerId: string, postId: string, item: IPost) => {
       console.log(e);
     });
 };
+
+export const getOnePost = (postId: string, setSelectedPost) => {
+  const url = `${hostURL}/api/posts/onepost${postId}`;
+  axios
+    .get(url)
+    .then(res => setSelectedPost(res.data.dat))
+    .catch(() => Alert.alert('Failed to fetch post'));
+};
+
+export const getTrendingPosts = async () => {
+  let {data} = await axios.get(`${hostURL}/api/posts/trending`);
+  return data.data;
+};
+
+export const getInterestedPosts = async (interests: string[]) => {
+  let {data} = await axios.patch(`${hostURL}/api/posts/interest-post`, {
+    interests,
+  });
+  return data;
+};

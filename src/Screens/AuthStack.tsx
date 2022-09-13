@@ -17,6 +17,7 @@ import {Header} from '../Components';
 import SignUp2 from './SignUp2';
 import SelectPersonToChat from './SelectPersonToChat';
 import ViewPostScreen from './ViewPostScreen';
+import PicDisplay from './PicDisplay';
 
 const Stack = createNativeStackNavigator();
 type Props = {};
@@ -32,6 +33,7 @@ const AuthStack = (props: Props) => {
       <Stack.Screen name="SignUp2" component={SignUp2} />
       <Stack.Screen name="MainApp" component={MainApp} />
       <Stack.Screen name="SelectChat" component={SelectPersonToChat} />
+      <Stack.Screen name="PictureDisplay" component={PicDisplay} />
       <Stack.Screen
         name="OtherProfile"
         component={OtherProfile}

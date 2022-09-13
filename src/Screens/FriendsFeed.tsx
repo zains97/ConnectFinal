@@ -4,6 +4,7 @@ import {
   StyleSheet,
   TouchableOpacity,
   View,
+  RefreshControl,
 } from 'react-native';
 import React from 'react';
 import {getAllPosts, getFriendsPosts} from '../Api/postApis';
@@ -19,9 +20,6 @@ import {
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import {useDispatch, useSelector} from 'react-redux';
 import {RootState} from '../Redux/store/store';
-import {getUser} from '../Api/userApis';
-import {storeMe} from '../Utilities/StoreMe';
-import {updateMeState} from '../Redux/slices/MeSlice';
 
 const FriendsFeed = ({navigation}: any) => {
   //Component start
@@ -43,8 +41,6 @@ const FriendsFeed = ({navigation}: any) => {
     React.useState(defaultPosts);
   const [loading, setLoading] = React.useState<boolean>(true);
   const [error, setError] = React.useState('');
-  const image = true;
-
   React.useEffect(() => {
     getFriendsPosts(me.friendsId)
       .then(response => {
@@ -60,6 +56,24 @@ const FriendsFeed = ({navigation}: any) => {
         setLoading(false);
       });
   }, []);
+  const [refreshing, setRefreshing] = React.useState(false);
+
+  const onRefresh = React.useCallback(() => {
+    setRefreshing(true);
+    getFriendsPosts(me.friendsId)
+      .then(response => {
+        setPosts(response);
+        setRefreshing(false);
+      })
+      .catch(ex => {
+        const error =
+          ex.response.status === 404
+            ? 'Resource Not found'
+            : 'An unexpected error has occurred';
+        setError(error);
+        setRefreshing(false);
+      });
+  }, []);
 
   return (
     <View>
@@ -67,6 +81,13 @@ const FriendsFeed = ({navigation}: any) => {
         <ActivityIndicator color="#1d4ed8" />
       ) : (
         <FlatList
+          refreshControl={
+            <RefreshControl
+              colors={['blue']}
+              refreshing={refreshing}
+              onRefresh={onRefresh}
+            />
+          }
           style={{margin: 20}}
           data={posts}
           renderItem={({item}) => (

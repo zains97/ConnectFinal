@@ -5,9 +5,16 @@ import {
   StyleSheet,
   TouchableOpacity,
   View,
+  RefreshControl,
+  Touchable,
 } from 'react-native';
 import React from 'react';
-import {getAllPosts, likePost, reportPost} from '../Api/postApis';
+import {
+  getAllPosts,
+  getInterestedPosts,
+  likePost,
+  reportPost,
+} from '../Api/postApis';
 import {IPost} from '../Interfaces/PostInterfaces';
 import {
   ActivityIndicator,
@@ -16,6 +23,7 @@ import {
   Card,
   Paragraph,
   Text,
+  TouchableRipple,
 } from 'react-native-paper';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import {useDispatch, useSelector} from 'react-redux';
@@ -38,52 +46,59 @@ const MainFeed = ({navigation}: Props) => {
   const LeftContent = (image: any, userId: string) => (
     <TouchableOpacity
       onPress={() => {
-        navigation.navigate('OtherProfile', {userId}); //Add props for navigation UserID
+        if (userId != me._id) {
+          navigation.navigate('OtherProfile', {userId}); //Add props for navigation UserID}
+        } else {
+          navigation.navigate('Profile');
+        }
       }}>
       <Avatar.Image size={40} source={{uri: image}} />
     </TouchableOpacity>
   );
-  // const updateUser = () => {
-  //   console.log('ME STATE REDUX: ', me._id);
-
-  //   try {
-  //     getUser(me._id).then(res => {
-  //       console.log('MAIN FEED RES: ', res);
-  //       storeMe(res);
-  //       dispatch(updateMeState(res));
-  //     });
-  //   } catch (error: any) {
-  //     setLoading(true);
-  //     Alert.alert(error);
-  //   }
-  // };
 
   const defaultPosts: IPost[] = [];
+  const [refreshing, setRefreshing] = React.useState(false);
 
   const [posts, setPosts]: [IPost[], (posts: IPost[]) => void] =
     React.useState(defaultPosts);
   const [loading, setLoading] = React.useState<boolean>(true);
-  const [error, setError] = React.useState('');
-  const image = true;
-
-  // React.useEffect(() => {
-  //   // getMe().then(res => console.log('GETME RES MAIN FEED : ', res));
-  //   updateUser();
-  // }, []);
 
   React.useEffect(() => {
-    getAllPosts()
-      .then(response => {
-        setPosts(response);
-        setLoading(false);
+    getInterestedPosts(me.interests)
+      .then(res => {
+        if (res.success == true) {
+          setPosts(res.posts);
+          setLoading(false);
+        } else {
+          Alert.alert('Sorry', 'Could not fetch posts');
+          setLoading(false);
+        }
       })
-      .catch(ex => {
-        const error =
-          ex.response.status === 404
-            ? 'Resource Not found'
-            : 'An unexpected error has occurred';
-        setError(error);
+      .catch(() => {
+        Alert.alert('Sorry', 'Could not fetch posts');
         setLoading(false);
+      });
+
+    return () => {
+      setPosts(defaultPosts);
+    };
+  }, []);
+
+  const onRefresh = React.useCallback(() => {
+    setRefreshing(true);
+    getInterestedPosts(me.interests)
+      .then(res => {
+        if (res.success == true) {
+          setPosts(res.posts);
+          setRefreshing(false);
+        } else {
+          Alert.alert('Sorry', 'Could not fetch posts');
+          setRefreshing(false);
+        }
+      })
+      .catch(() => {
+        Alert.alert('Sorry', 'Could not fetch posts');
+        setRefreshing(false);
       });
   }, []);
 
@@ -93,6 +108,13 @@ const MainFeed = ({navigation}: Props) => {
         <ActivityIndicator color="#1d4ed8" />
       ) : (
         <FlatList
+          refreshControl={
+            <RefreshControl
+              colors={['blue']}
+              refreshing={refreshing}
+              onRefresh={onRefresh}
+            />
+          }
           style={{margin: 20}}
           data={posts}
           renderItem={({item}) =>
@@ -107,11 +129,18 @@ const MainFeed = ({navigation}: Props) => {
 
                 {item.postImage == undefined ||
                 item.postImage == 'no' ? null : (
-                  <Card.Cover
-                    resizeMethod="resize"
-                    resizeMode="cover"
-                    source={{uri: `data:image/jpeg;base64,${item.postImage}`}}
-                  />
+                  <TouchableOpacity
+                    onPress={() => {
+                      navigation.navigate('PictureDisplay', {
+                        image: item.postImage,
+                      });
+                    }}>
+                    <Card.Cover
+                      resizeMethod="resize"
+                      resizeMode="cover"
+                      source={{uri: `data:image/jpeg;base64,${item.postImage}`}}
+                    />
+                  </TouchableOpacity>
                 )}
                 <Card.Content>
                   <Paragraph>{item.postBody}</Paragraph>
@@ -133,7 +162,7 @@ const MainFeed = ({navigation}: Props) => {
                   </Text>
                   <Button
                     onPress={() => {
-                      navigation.navigate('ViewPost');
+                      navigation.navigate('ViewPost', {selectedPost: item});
                     }}
                     color="#1d4ed8">
                     Comments

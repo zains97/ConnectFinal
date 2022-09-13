@@ -25,7 +25,7 @@ export const tags = [
   },
   {
     id: 6,
-    name: 'Marital Arts',
+    name: 'Martial Arts',
   },
   {
     id: 7,
@@ -70,5 +70,9 @@ export const tags = [
   {
     id: 17,
     name: 'Philosophy',
+  },
+  {
+    id: 18,
+    name: 'Christianity',
   },
 ];

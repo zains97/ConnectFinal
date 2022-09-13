@@ -112,7 +112,9 @@ const Profile = ({navigation}: Props) => {
                 borderRadius: 10,
                 margin: 15,
               }}>
-              <Text style={{color: 'white', fontSize: 24}}>20</Text>
+              <Text style={{color: 'white', fontSize: 24}}>
+                {me.friendsId.length}
+              </Text>
               <Text style={{color: 'white', fontSize: 24}}>FRIENDS</Text>
             </TouchableOpacity>
           </View>

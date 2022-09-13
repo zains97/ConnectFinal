@@ -19,7 +19,6 @@ const Splash = ({navigation}: Props) => {
       if (res) {
         getUser(res._id)
           .then(res2 => {
-            console.log('SPLASH: ', res2.data);
             dispatch(updateMeState(res2.data));
             storeMe(res2.data);
           })

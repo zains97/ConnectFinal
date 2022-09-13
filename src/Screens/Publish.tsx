@@ -27,7 +27,6 @@ const Publish = ({navigation}: Props) => {
   const [postImage, setImage] = useState<string>();
   const [postBody, setPostBody] = useState('');
   const [selectedTags, setSelectedTags] = useState('');
-  console.log('SELECTED TAG: ', selectedTags);
   const publishPost = () => {
     if (postBody.length < 10) {
       Alert.alert('Post must be more than 10 characters long.');
@@ -101,7 +100,6 @@ const Publish = ({navigation}: Props) => {
                   onPress={() => {
                     setSelectedTags(data.name);
                   }}>
-                  {console.log(data.name)}
                   <View
                     style={{
                       padding: 6,
