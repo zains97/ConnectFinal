@@ -18,7 +18,12 @@ import {
 import {useDispatch, useSelector} from 'react-redux';
 import {RootState} from '../Redux/store/store';
 import {IPost} from '../Interfaces/PostInterfaces';
-import {getTrendingPosts, likePost, reportPost} from '../Api/postApis';
+import {
+  deletePost,
+  getTrendingPosts,
+  likePost,
+  reportPost,
+} from '../Api/postApis';
 import {checkBlocked} from '../Utilities/checkBlocked';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 
@@ -89,11 +94,20 @@ const TrendingPosts = ({navigation}: any) => {
 
                 {item.postImage == undefined ||
                 item.postImage == 'no' ? null : (
-                  <Card.Cover
-                    resizeMethod="resize"
-                    resizeMode="cover"
-                    source={{uri: `data:image/jpeg;base64,${item.postImage}`}}
-                  />
+                  <TouchableOpacity
+                    onPress={() => {
+                      navigation.navigate('PictureDisplay', {
+                        image: item.postImage,
+                      });
+                    }}>
+                    <Card.Cover
+                      resizeMethod="resize"
+                      resizeMode="cover"
+                      source={{
+                        uri: `data:image/jpeg;base64,${item.postImage}`,
+                      }}
+                    />
+                  </TouchableOpacity>
                 )}
                 <Card.Content>
                   <Paragraph>{item.postBody}</Paragraph>
@@ -120,18 +134,31 @@ const TrendingPosts = ({navigation}: any) => {
                     color="#1d4ed8">
                     Comments
                   </Button>
-                  <Button
-                    onPress={() => {
-                      reportPost(me._id, item._id);
-                      console.log('Report');
-                    }}
-                    color="white"
-                    style={{
-                      backgroundColor: 'red',
-                      marginHorizontal: '5%',
-                    }}>
-                    Report
-                  </Button>
+                  {item.creator == me._id ? (
+                    <Button
+                      onPress={() => {
+                        deletePost(item._id);
+                      }}
+                      color="white"
+                      style={{
+                        backgroundColor: 'red',
+                        marginHorizontal: '5%',
+                      }}>
+                      Delete
+                    </Button>
+                  ) : (
+                    <Button
+                      onPress={() => {
+                        reportPost(me._id, item._id);
+                      }}
+                      color="white"
+                      style={{
+                        backgroundColor: 'red',
+                        marginHorizontal: '5%',
+                      }}>
+                      Report
+                    </Button>
+                  )}
                 </Card.Actions>
               </Card>
             ) : (

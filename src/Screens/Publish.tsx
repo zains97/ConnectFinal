@@ -40,6 +40,9 @@ const Publish = ({navigation}: Props) => {
           me.firstName,
           postImage,
         );
+        setSelectedTags('');
+        setImage(undefined);
+        setPostBody('');
         setTimeout(() => navigation.jumpTo('Home'), 2000);
       } else {
         Alert.alert('You must select a tag.');

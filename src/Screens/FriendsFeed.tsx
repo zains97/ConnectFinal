@@ -7,7 +7,12 @@ import {
   RefreshControl,
 } from 'react-native';
 import React from 'react';
-import {getAllPosts, getFriendsPosts} from '../Api/postApis';
+import {
+  deletePost,
+  getAllPosts,
+  getFriendsPosts,
+  reportPost,
+} from '../Api/postApis';
 import {IPost} from '../Interfaces/PostInterfaces';
 import {
   ActivityIndicator,
@@ -100,9 +105,20 @@ const FriendsFeed = ({navigation}: any) => {
               />
 
               {item.postImage == undefined || item.postImage == 'no' ? null : (
-                <Card.Cover
-                  source={{uri: `data:image/jpeg;base64,${item.postImage}`}}
-                />
+                <TouchableOpacity
+                  onPress={() => {
+                    navigation.navigate('PictureDisplay', {
+                      image: item.postImage,
+                    });
+                  }}>
+                  <Card.Cover
+                    resizeMethod="resize"
+                    resizeMode="cover"
+                    source={{
+                      uri: `data:image/jpeg;base64,${item.postImage}`,
+                    }}
+                  />
+                </TouchableOpacity>
               )}
               <Card.Content>
                 <Paragraph>{item.postBody}</Paragraph>
@@ -126,6 +142,32 @@ const FriendsFeed = ({navigation}: any) => {
                   color="#1d4ed8">
                   Comments
                 </Button>
+                {item.creator == me._id ? (
+                  <Button
+                    onPress={() => {
+                      deletePost(item._id);
+                    }}
+                    color="white"
+                    style={{
+                      backgroundColor: 'red',
+                      marginHorizontal: '5%',
+                    }}>
+                    Delete
+                  </Button>
+                ) : (
+                  <Button
+                    onPress={() => {
+                      reportPost(me._id, item._id);
+                      console.log('Report');
+                    }}
+                    color="white"
+                    style={{
+                      backgroundColor: 'red',
+                      marginHorizontal: '5%',
+                    }}>
+                    Report
+                  </Button>
+                )}
               </Card.Actions>
             </Card>
           )}

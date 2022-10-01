@@ -33,6 +33,7 @@ export const meSlice = createSlice({
   initialState,
   reducers: {
     updateMeState: (state, action: PayloadAction<IUser>) => {
+      console.log('UPDATE STATE FUNC: ', action.payload.profilePic);
       state.value = action.payload;
     },
   },

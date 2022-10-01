@@ -1,4 +1,6 @@
+import {ActionCreatorWithPayload} from '@reduxjs/toolkit';
 import axios from 'axios';
+import {Dispatch} from 'react';
 import {Alert} from 'react-native';
 import {IUser} from '../Interfaces/UserInterface';
 
@@ -39,21 +41,30 @@ export const sendFriendRequest = async (
       requester,
       recipient,
     });
-    data.success == true ? Alert.alert('Success') : Alert.alert('Failed');
+    // data.success == true ? Alert.alert('Success') : Alert.alert('Failed');
+    return data;
   } catch (err) {
-    console.log(err);
+    return {success: false};
   }
 };
 
-export const cancelFriendRequest = (senderId: string, recipientId: string) => {
-  console.log(senderId, recipientId);
-
-  axios
-    .put(`${hostURL}/cancel-request`, {senderId, recipientId})
-    .then(res => {
-      res.data.success == true
-        ? Alert.alert('REQUEST CANCELLED')
-        : Alert.alert('Failed to cancel request');
-    })
-    .catch(() => Alert.alert('Failed to cancel request'));
+export const cancelFriendRequest = async (
+  senderId: string,
+  recipientId: string,
+) => {
+  try {
+    let {data} = await axios.put(`${hostURL}/cancel-request`, {
+      senderId,
+      recipientId,
+    });
+    return data;
+  } catch (error) {
+    return {success: false};
+  }
+  // .then(res => {
+  //   res.data.success == true
+  //     ? Alert.alert('REQUEST CANCELLED')
+  //     : Alert.alert('Failed to cancel request');
+  // })
+  // .catch(() => Alert.alert('Failed to cancel request'));
 };

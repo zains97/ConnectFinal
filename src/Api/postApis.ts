@@ -24,7 +24,13 @@ export const newPost = (
     .then(res => {
       Alert.alert('Post created');
     })
-    .catch(e => Alert.alert(e));
+    .catch(e => {
+      if (e.message == 'Request failed with status code 413') {
+        Alert.alert('Image too large');
+      } else {
+        Alert.alert('Failed to create post');
+      }
+    });
 };
 
 export const newComment = async (
@@ -85,4 +91,18 @@ export const getInterestedPosts = async (interests: string[]) => {
     interests,
   });
   return data;
+};
+
+export const deletePost = (postId: string) => {
+  let url = `${hostURL}/api/posts/onepost/${postId}`;
+  axios
+    .delete(url)
+    .then(res => {
+      res.data.success == true
+        ? Alert.alert('Deleted post successfully')
+        : Alert.alert('Failed to delete post');
+    })
+    .catch(() => {
+      Alert.alert('Failed to delete post');
+    });
 };

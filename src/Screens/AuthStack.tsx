@@ -18,6 +18,7 @@ import SignUp2 from './SignUp2';
 import SelectPersonToChat from './SelectPersonToChat';
 import ViewPostScreen from './ViewPostScreen';
 import PicDisplay from './PicDisplay';
+import UploadProfilePic from './UploadProfilePic';
 
 const Stack = createNativeStackNavigator();
 type Props = {};
@@ -42,6 +43,7 @@ const AuthStack = (props: Props) => {
           headerBackButtonMenuEnabled: false,
         }}
       />
+      <Stack.Screen name="UploadProfilePic" component={UploadProfilePic} />
       <Stack.Screen name="Profile" component={Profile} />
       <Stack.Screen
         name="UpdateProfile"

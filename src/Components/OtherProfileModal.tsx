@@ -5,6 +5,7 @@ import {
   View,
   Dimensions,
   TouchableOpacity,
+  Alert,
 } from 'react-native';
 import React, {useState} from 'react';
 import {cancelFriendRequest, sendFriendRequest} from '../Api/friendsApi';
@@ -82,7 +83,17 @@ const OtherProfileModal = ({
             <TouchableOpacity
               style={styles.modalPress}
               onPress={async () => {
-                cancelFriendRequest(me._id, userId);
+                cancelFriendRequest(me._id, userId)
+                  .then(res => {
+                    if (res.success != true) {
+                      Alert.alert('Something went wrong');
+                    } else {
+                      dispatch(updateMeState(res.user));
+                    }
+                  })
+                  .catch(e => {
+                    Alert.alert('Something went wrong');
+                  });
               }}>
               <Text style={styles.textStyle}>Cancel Friend Request</Text>
             </TouchableOpacity>
@@ -90,9 +101,15 @@ const OtherProfileModal = ({
             //Send
             <TouchableOpacity
               style={styles.modalPress}
-              onPress={async () => {
-                await sendFriendRequest(me, userId);
-                me.sentFriendRequests = [...me.sentFriendRequests, userId];
+              onPress={() => {
+                sendFriendRequest(me, userId).then(res => {
+                  console.log('sendFriendRequest RES: ', res);
+                  if (res.success == true) {
+                    dispatch(updateMeState(res.user));
+                  } else {
+                    Alert.alert('Sorry', 'Failed to send friend request');
+                  }
+                });
               }}>
               <Text style={styles.textStyle}>Send Friend Request</Text>
             </TouchableOpacity>

@@ -42,6 +42,7 @@ const OtherProfileModal = ({
           <TouchableOpacity
             style={styles.modalPress}
             onPress={() => {
+              navigation.navigate('UploadProfilePic');
               setModalVisible(!modalVisible);
             }}>
             <Text style={styles.textStyle}>Upload picture</Text>

@@ -48,10 +48,8 @@ const SignUp2 = ({navigation}: any) => {
         <Text style={styles.logoContainerHeading}>Connect</Text>
       </View>
       <View style={styles.signUpForm}>
-        <Text style={styles.signUpFormHeading}>
-          Upload Image and Select Interests
-        </Text>
-        {image == '' ? (
+        <Text style={styles.signUpFormHeading}>Select Interests</Text>
+        {/* {image == '' ? (
           <>
             <View
               style={{
@@ -116,19 +114,19 @@ const SignUp2 = ({navigation}: any) => {
               Remove image
             </Button>
           </>
-        )}
+        )} */}
 
-        <View style={{height: '45%'}}>
+        <View style={{height: '40%'}}>
           <Text
             style={{
-              marginHorizontal: 10,
+              marginHorizontal: 20,
               fontSize: 16,
               fontWeight: 'bold',
               color: 'black',
             }}>
             Select Interests{' '}
           </Text>
-          <ScrollView horizontal={true}>
+          <ScrollView style={{marginTop: 10}} horizontal={true}>
             <View
               style={{
                 marginHorizontal: 10,
@@ -220,7 +218,6 @@ const SignUp2 = ({navigation}: any) => {
                 info.password,
                 gender,
                 tag,
-                image,
               ),
                 setTimeout(() => {
                   navigation.navigate('Login');

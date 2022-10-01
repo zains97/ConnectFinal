@@ -1,5 +1,5 @@
 import axios from 'axios';
-import {Alert} from 'react-native';
+import {Alert, LogBox} from 'react-native';
 import {IUser} from '../Interfaces/UserInterface';
 
 const hostURL = 'http://192.168.0.103:5000';
@@ -8,7 +8,8 @@ export const loginUser = async (email: string, password: string) => {
   try {
     const url = `${hostURL}/api/auth/login`;
     const {data} = await axios.post(url, {email, password});
-    if (data.message == 'Incorrect email address.') {
+    console.log('RES: ', data);
+    if (data.message != 'Login successful') {
       return Alert.alert(data.message);
     }
     return data;
@@ -84,7 +85,6 @@ export const signUpUser = (
   password: string,
   gender: string,
   interests: string[],
-  profilePic: string,
 ) => {
   const url = `${hostURL}/api/auth/register`;
 
@@ -95,7 +95,6 @@ export const signUpUser = (
     password,
     gender,
     interests,
-    profilePic: profilePic == '' ? undefined : profilePic,
   };
 
   axios
@@ -104,7 +103,7 @@ export const signUpUser = (
       Alert.alert('Congrats, Successfully created new user!');
     })
     .catch(e => {
-      Alert.alert('Sorry', e.message);
+      Alert.alert('Sorry', 'Failed to register user');
     });
 
   console.log('BODY: ', body);
@@ -113,4 +112,41 @@ export const signUpUser = (
 export const updateLocation = (userId: string, location: Object) => {
   let url = `${hostURL}/api/user/update-location`;
   axios.patch(url, {userId, location}).catch(() => {});
+};
+//{{URL}}/api/user/user/61f8431b8c7f11793a626640
+export const updateUser = (
+  userId: string,
+  firstName: string,
+  lastName: string,
+  email: string,
+  gender: string,
+  dob: string,
+  dispatch: any,
+  updateMeState: any,
+) => {
+  axios
+    .patch(`${hostURL}/api/user/user/${userId}`, {
+      firstName,
+      lastName,
+      email,
+      gender,
+      dob,
+    })
+    .then(res => {
+      dispatch(updateMeState(res.data.data));
+      Alert.alert('Updated user');
+    })
+    .catch(() => {
+      Alert.alert('Could not update user');
+    });
+};
+
+export const uploadPicture = async (userId: string, profilePic: string) => {
+  const url = `${hostURL}/api/user/upload-photo`;
+  try {
+    const {data} = await axios.put(url, {userId, profilePic});
+    return data;
+  } catch (err) {
+    return {success: false};
+  }
 };

@@ -10,6 +10,7 @@ import {
 } from 'react-native';
 import React from 'react';
 import {
+  deletePost,
   getAllPosts,
   getInterestedPosts,
   likePost,
@@ -28,11 +29,7 @@ import {
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import {useDispatch, useSelector} from 'react-redux';
 import {RootState} from '../Redux/store/store';
-import {getUser} from '../Api/userApis';
-import {getMe, storeMe} from '../Utilities/StoreMe';
-import {updateMeState} from '../Redux/slices/MeSlice';
 import {checkBlocked} from '../Utilities/checkBlocked';
-import {useLinkBuilder} from '@react-navigation/native';
 
 type Props = {
   navigation: any;
@@ -101,7 +98,7 @@ const MainFeed = ({navigation}: Props) => {
         setRefreshing(false);
       });
   }, []);
-
+  const [modalVisible, setModalVisible] = React.useState(false);
   return (
     <View style={styles.container}>
       {loading ? (
@@ -119,68 +116,95 @@ const MainFeed = ({navigation}: Props) => {
           data={posts}
           renderItem={({item}) =>
             !checkBlocked(item.creator, me.blockedUsers) ? (
-              <Card style={{marginVertical: 5}}>
-                <Card.Title
-                  title={item.creatorName}
-                  subtitle={item.createDate.toString()}
-                  left={() => LeftContent(item.creatorImage, item.creator)}
-                  titleStyle={{fontSize: 16}}
-                />
+              <TouchableOpacity
+                onLongPress={() => {
+                  setModalVisible(true);
+                }}>
+                <Card style={{marginVertical: 5}}>
+                  <Card.Title
+                    title={item.creatorName}
+                    subtitle={item.createDate.toString()}
+                    left={() => LeftContent(item.creatorImage, item.creator)}
+                    titleStyle={{fontSize: 16}}
+                  />
 
-                {item.postImage == undefined ||
-                item.postImage == 'no' ? null : (
-                  <TouchableOpacity
-                    onPress={() => {
-                      navigation.navigate('PictureDisplay', {
-                        image: item.postImage,
-                      });
-                    }}>
-                    <Card.Cover
-                      resizeMethod="resize"
-                      resizeMode="cover"
-                      source={{uri: `data:image/jpeg;base64,${item.postImage}`}}
-                    />
-                  </TouchableOpacity>
-                )}
-                <Card.Content>
-                  <Paragraph>{item.postBody}</Paragraph>
-                </Card.Content>
+                  {item.postImage == undefined ||
+                  item.postImage == 'no' ? null : (
+                    <TouchableOpacity
+                      onPress={() => {
+                        navigation.navigate('PictureDisplay', {
+                          image: item.postImage,
+                        });
+                      }}>
+                      <Card.Cover
+                        resizeMethod="resize"
+                        resizeMode="cover"
+                        source={{
+                          uri: `data:image/jpeg;base64,${item.postImage}`,
+                        }}
+                      />
+                    </TouchableOpacity>
+                  )}
+                  <Card.Content>
+                    <Paragraph>{item.postBody}</Paragraph>
+                  </Card.Content>
 
-                <Card.Actions>
-                  <Button
-                    onPress={() => {
-                      likePost(me._id, item._id, item);
-                    }}>
-                    <MaterialCommunityIcons
-                      name="thumb-up-outline"
-                      color="#1d4ed8"
-                      size={22}
-                    />
-                  </Button>
-                  <Text style={{color: 'blue'}}>
-                    {item.likeCount == undefined ? 0 : item.likeCount}
-                  </Text>
-                  <Button
-                    onPress={() => {
-                      navigation.navigate('ViewPost', {selectedPost: item});
-                    }}
-                    color="#1d4ed8">
-                    Comments
-                  </Button>
-                  <Button
-                    onPress={() => {
-                      reportPost(me._id, item._id);
-                      console.log('Report');
-                    }}
-                    color="white"
+                  <Card.Actions
                     style={{
-                      backgroundColor: 'red',
-                      marginHorizontal: '5%',
+                      display: 'flex',
+                      flexDirection: 'row',
+                      flexWrap: 'wrap',
                     }}>
-                    Report
-                  </Button>
-                </Card.Actions>
-              </Card>
+                    <Button
+                      onPress={() => {
+                        likePost(me._id, item._id, item);
+                      }}>
+                      <MaterialCommunityIcons
+                        name="thumb-up-outline"
+                        color="#1d4ed8"
+                        size={20}
+                      />
+                    </Button>
+                    <Text style={{color: 'blue'}}>
+                      {item.likeCount == undefined ? 0 : item.likeCount}
+                    </Text>
+                    <Button
+                      onPress={() => {
+                        navigation.navigate('ViewPost', {selectedPost: item});
+                      }}
+                      color="#1d4ed8">
+                      Comments
+                    </Button>
+
+                    {item.creator == me._id ? (
+                      <Button
+                        onPress={() => {
+                          deletePost(item._id);
+                        }}
+                        color="white"
+                        style={{
+                          backgroundColor: 'red',
+                          marginHorizontal: '5%',
+                        }}>
+                        Delete
+                      </Button>
+                    ) : (
+                      <Button
+                        onPress={() => {
+                          reportPost(me._id, item._id);
+                          console.log('Report');
+                        }}
+                        color="white"
+                        style={{
+                          backgroundColor: 'red',
+                          marginHorizontal: '5%',
+                        }}>
+                        Report
+                      </Button>
+                    )}
+                  </Card.Actions>
+                </Card>
+              </TouchableOpacity>
             ) : (
               <></>
             )

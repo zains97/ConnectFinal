@@ -10,6 +10,10 @@ import {
 import Icon from 'react-native-vector-icons/Fontisto';
 import {Button, Text} from 'react-native-paper';
 import DatePicker from 'react-native-date-picker';
+import {updateUser} from '../Api/userApis';
+import {useDispatch, useSelector} from 'react-redux';
+import {RootState} from '../Redux/store/store';
+import {updateMeState} from '../Redux/slices/MeSlice';
 
 const {width} = Dimensions.get('screen');
 
@@ -21,24 +25,26 @@ const UpdateProfile = ({navigation}: Props) => {
   const [fName, setFName] = useState<string>();
   const [lName, setLName] = useState<string>();
   const [email, setEmail] = useState<string>();
-  const [updatePassword, setUpdatePassword] = useState<string>();
-  const [confirmPassword, setConfirmPassword] = useState<string>();
   const [gender, setGender] = useState<string>();
 
-  const _date = new Date();
   const [date, setDate] = useState<Date>(new Date('Mar 25 2015'));
   const [open, setOpen] = useState(false);
-
+  const me = useSelector((state: RootState) => state.me.value);
+  const dispatch = useDispatch();
   const genders = [
     {
       id: 1,
-      gender: 'male',
+      gender: 'Male',
     },
     {
       id: 2,
-      gender: 'female',
+      gender: 'Female',
     },
   ];
+  console.log(
+    'DATE:',
+    date.toLocaleDateString().replace('/', '-').replace('/', '-'),
+  );
   return (
     <View style={{flex: 1}}>
       <ScrollView style={{backgroundColor: 'white', flex: 0.875}}>
@@ -61,20 +67,6 @@ const UpdateProfile = ({navigation}: Props) => {
             placeholder="Email"
             selectionColor={'orange'}
           />
-          <TextInput
-            onChangeText={text => setUpdatePassword(text)}
-            style={styles.textInput}
-            placeholder="Update Password"
-            selectionColor={'orange'}
-            secureTextEntry={true}
-          />
-          <TextInput
-            onChangeText={text => setConfirmPassword(text)}
-            style={styles.textInput}
-            placeholder="Confirm Password"
-            selectionColor={'orange'}
-            secureTextEntry={true}
-          />
         </View>
         <View
           style={{
@@ -83,8 +75,9 @@ const UpdateProfile = ({navigation}: Props) => {
             alignItems: 'center',
             marginVertical: 10,
           }}>
-          {genders.map(data => (
+          {genders.map((data, index) => (
             <TouchableOpacity
+              key={index}
               onPress={() => setGender(data.gender)}
               activeOpacity={0.6}
               style={{
@@ -100,7 +93,7 @@ const UpdateProfile = ({navigation}: Props) => {
               }}>
               <Icon
                 color={'white'}
-                name={data.gender}
+                name={data.gender == 'Male' ? 'male' : 'female'}
                 size={data.gender === gender ? 28 : 24}
               />
             </TouchableOpacity>
@@ -148,6 +141,27 @@ const UpdateProfile = ({navigation}: Props) => {
             />
           </View>
         </View>
+        <Button
+          onPress={() => {
+            updateUser(
+              me._id,
+              fName,
+              lName,
+              email,
+              gender,
+              date,
+              dispatch,
+              updateMeState,
+            );
+          }}
+          color="white"
+          style={{
+            backgroundColor: '#1d4ed8',
+            width: width * 0.5,
+            alignSelf: 'center',
+          }}>
+          Update
+        </Button>
       </ScrollView>
     </View>
   );
@@ -165,7 +179,8 @@ const styles = StyleSheet.create({
     width: '85%',
     marginVertical: 10,
     borderWidth: 1,
-    borderRadius: 2,
+    borderRadius: 5,
+    borderColor: 'gray',
   },
   dobButton: {
     flexDirection: 'row',
