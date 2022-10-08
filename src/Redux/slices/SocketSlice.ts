@@ -1,8 +1,13 @@
 import {createSlice, PayloadAction} from '@reduxjs/toolkit';
+import {Socket} from 'socket.io-client';
 import {IUser} from '../../Interfaces/UserInterface';
 
+export interface UserState {
+  value: Socket;
+}
+
 const initialState = {
-  socket: null,
+  value: null,
 };
 
 export const socketSlice = createSlice({
@@ -10,7 +15,8 @@ export const socketSlice = createSlice({
   initialState,
   reducers: {
     updateSocketState: (state, action) => {
-      state.socket = action.payload;
+      console.log('socket saved: ', action.payload);
+      state.value = action.payload;
     },
   },
 });

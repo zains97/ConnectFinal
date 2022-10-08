@@ -12,10 +12,11 @@ import FontAwesome5Icon from 'react-native-vector-icons/FontAwesome5';
 import {Button, TextInput} from 'react-native-paper';
 import {useSelector} from 'react-redux';
 import {RootState} from '../Redux/store/store';
-import {io} from 'socket.io-client';
+import {connect, Socket} from 'socket.io-client';
 import {sendMessage} from '../Api/userApis';
 
-const SERVER = 'http://192.168.1.102:5000';
+const SERVER = 'http://192.168.0.103:5000';
+const socket: Socket = connect(SERVER);
 
 type Props = {};
 
@@ -57,7 +58,9 @@ const Chatroom = (props: Props) => {
   const [text, setText] = useState('');
   const [toggler, setToggler] = useState(false);
 
-  let socket = io(SERVER);
+  const startCall = () => {
+    socket.emit('callUser', {message: 'Starting call'});
+  };
 
   useEffect(() => {
     socket.on('messages', data => {
@@ -65,6 +68,9 @@ const Chatroom = (props: Props) => {
       //data condition
       setToggler(!toggler);
     });
+    return () => {
+      socket.close;
+    };
   }, []);
 
   useEffect(() => {
@@ -86,7 +92,7 @@ const Chatroom = (props: Props) => {
           <Text style={styles.headerName}>Zain Saleem</Text>
         </View>
         <View style={styles.headerIconsContainer}>
-          <TouchableOpacity>
+          <TouchableOpacity onPress={startCall}>
             <FontAwesome5Icon size={20} name="phone" color={'white'} />
           </TouchableOpacity>
           <TouchableOpacity>
@@ -169,7 +175,7 @@ const Chatroom = (props: Props) => {
         />
         <Button
           onPress={() => {
-            socket.emit('chat message', text);
+            socket.emit('send-message', {text});
             setMessageArr([...messageArr, {sender: 'Me', body: text}]);
             // sendMessage(text,)
             setText('');
