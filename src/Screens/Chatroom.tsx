@@ -1,4 +1,5 @@
 import {
+  Alert,
   Dimensions,
   FlatList,
   Image,
@@ -15,8 +16,8 @@ import {RootState} from '../Redux/store/store';
 import {connect, Socket} from 'socket.io-client';
 import {sendMessage} from '../Api/userApis';
 
-const SERVER = 'http://192.168.0.103:5000';
-const socket: Socket = connect(SERVER);
+const SERVER = 'http://192.168.0.107:5000';
+let socket: Socket;
 
 type Props = {};
 
@@ -55,27 +56,25 @@ const {width} = Dimensions.get('screen');
 
 const Chatroom = (props: Props) => {
   let [messageArr, setMessageArr] = useState<any[]>([]);
-  const [text, setText] = useState('');
+  const [messageBody, setMessageBody] = useState('');
   const [toggler, setToggler] = useState(false);
+  const me = useSelector((state: RootState) => state.me.value);
+  const [chatroomId, setChatroomId] = useState('');
 
   const startCall = () => {
     socket.emit('callUser', {message: 'Starting call'});
   };
 
   useEffect(() => {
-    socket.on('messages', data => {
-      console.log(data);
-      //data condition
-      setToggler(!toggler);
-    });
-    return () => {
-      socket.close;
-    };
-  }, []);
+    socket = connect(SERVER);
 
-  useEffect(() => {
-    // get messages
-  }, [toggler]);
+    socket.emit('joinRoom', {
+      user: me,
+      chatroomId: 'testing123',
+    });
+
+    return () => {};
+  }, []);
 
   return (
     <View style={styles.chatRoomContainer}>
@@ -166,19 +165,24 @@ const Chatroom = (props: Props) => {
       </View>
       <View style={styles.inputContainer}>
         <TextInput
-          value={text}
+          value={messageBody}
           onChangeText={text => {
-            setText(text);
+            setMessageBody(text);
           }}
           style={styles.msgInput}
           placeholder={'Chat away!'}
         />
         <Button
           onPress={() => {
-            socket.emit('send-message', {text});
-            setMessageArr([...messageArr, {sender: 'Me', body: text}]);
-            // sendMessage(text,)
-            setText('');
+            if (messageBody.length > 0) {
+              socket.emit('test', {messageBody}, async (err: any) => {
+                if (!err) {
+                  setMessageBody('');
+                } else {
+                  Alert.alert('Failed to send message');
+                }
+              });
+            }
           }}
           style={{backgroundColor: '#1d4ed8', margin: 10}}>
           <FontAwesome5Icon name="paper-plane" color="white" size={20} />
@@ -256,3 +260,18 @@ const styles = StyleSheet.create({
   },
   msgInput: {height: 40, width: '70%'},
 });
+
+// useEffect(() => {
+//   socket.on('messages', data => {
+//     console.log(data);
+//     //data condition
+//     setToggler(!toggler);
+//   });
+//   return () => {
+//     socket.close;
+//   };
+// }, []);
+
+// useEffect(() => {
+//   // get messages
+// }, [toggler]);
