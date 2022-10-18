@@ -15,6 +15,9 @@ import {useSelector} from 'react-redux';
 import {RootState} from '../Redux/store/store';
 import {connect, Socket} from 'socket.io-client';
 import {sendMessage} from '../Api/userApis';
+import {text} from '@cloudinary/url-gen/qualifiers/source';
+import {IMessage} from '../Interfaces/IMessage';
+import {getAllMessages} from '../Api/chatroomApi';
 
 const SERVER = 'http://192.168.0.107:5000';
 let socket: Socket;
@@ -55,7 +58,7 @@ const {width} = Dimensions.get('screen');
 // ];
 
 const Chatroom = (props: Props) => {
-  let [messageArr, setMessageArr] = useState<any[]>([]);
+  let [messageArr, setMessageArr] = useState<IMessage[]>([]);
   const [messageBody, setMessageBody] = useState('');
   const [toggler, setToggler] = useState(false);
   const me = useSelector((state: RootState) => state.me.value);
@@ -65,24 +68,56 @@ const Chatroom = (props: Props) => {
     socket.emit('callUser', {message: 'Starting call'});
   };
 
+  const sendMessage = (messageBody: string) => {
+    socket.emit(
+      'sendMessage',
+      {
+        messageBody,
+        sender: me,
+        chatroomId: '6345e6fa3c5fd21ca8c68a6d',
+      },
+      (hasError: boolean, message: IMessage) => {
+        if (!hasError) {
+          setMessageBody('');
+          setMessageArr(oldArr => [message, ...oldArr]);
+        } else {
+          Alert.alert('Something went wrong');
+        }
+      },
+    );
+  };
+
   useEffect(() => {
     socket = connect(SERVER);
+    socket.emit('joinRoom', {chatroomId: '6345e6fa3c5fd21ca8c68a6d'});
 
-    socket.emit('joinRoom', {
-      user: me,
-      chatroomId: 'testing123',
+    socket.on('message', message => {
+      setMessageArr(oldArr => [message, ...oldArr]);
     });
-
     return () => {};
   }, []);
 
+  useEffect(() => {
+    getAllMessages('6345e6fa3c5fd21ca8c68a6d')
+      .then(res => {
+        if (res.success == true) {
+          setMessageArr(res.messages);
+        } else {
+          Alert.alert('Failed to load messages');
+        }
+      })
+      .catch(() => {
+        Alert.alert('Failed to load messages');
+      });
+  }, []);
+  console.log('Sender', messageArr[5]?.sender);
   return (
     <View style={styles.chatRoomContainer}>
       <View style={styles.chatRoomHeader}>
         <TouchableOpacity style={styles.imageContainer}>
           <Image
             source={{
-              uri: 'https://www.dmarge.com/wp-content/uploads/2021/01/dwayne-the-rock-.jpg',
+              uri: me.profilePic,
             }}
             style={styles.image}
           />
@@ -108,7 +143,7 @@ const Chatroom = (props: Props) => {
           style={{backgroundColor: '#eeeeee'}}
           data={messageArr}
           renderItem={({item, index}) => {
-            if (item.sender == 'Me') {
+            if (item.sender._id == me._id) {
               return (
                 <View
                   style={{
@@ -123,9 +158,8 @@ const Chatroom = (props: Props) => {
                   }}
                   key={index}>
                   <Text style={{fontSize: 16, color: '#fff'}} key={index}>
-                    {item.body}
+                    {item.messageBody}
                   </Text>
-
                   <View style={styles.rightArrow}></View>
                   <View style={styles.rightArrowOverlap}></View>
                 </View>
@@ -144,6 +178,9 @@ const Chatroom = (props: Props) => {
                     marginBottom: 1,
                   }}
                   key={index}>
+                  <Text style={{fontSize: 12}}>
+                    {item.sender.firstName + ' ' + item.sender.lastName}
+                  </Text>
                   <Text
                     style={{
                       fontSize: 16,
@@ -151,8 +188,7 @@ const Chatroom = (props: Props) => {
                       justifyContent: 'center',
                     }}
                     key={index}>
-                    {' '}
-                    {item.body}
+                    {item.messageBody}
                   </Text>
                   <View style={styles.leftArrow}></View>
                   <View style={styles.leftArrowOverlap}></View>
@@ -175,13 +211,7 @@ const Chatroom = (props: Props) => {
         <Button
           onPress={() => {
             if (messageBody.length > 0) {
-              socket.emit('test', {messageBody}, async (err: any) => {
-                if (!err) {
-                  setMessageBody('');
-                } else {
-                  Alert.alert('Failed to send message');
-                }
-              });
+              sendMessage(messageBody);
             }
           }}
           style={{backgroundColor: '#1d4ed8', margin: 10}}>

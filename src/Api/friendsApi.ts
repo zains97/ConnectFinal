@@ -68,3 +68,12 @@ export const cancelFriendRequest = async (
   // })
   // .catch(() => Alert.alert('Failed to cancel request'));
 };
+
+const getFriends = async (userId: string) => {
+  try {
+    let {data} = await axios.get(`${hostURL}/${userId}`);
+    return data;
+  } catch (error) {
+    return {success: false};
+  }
+};
